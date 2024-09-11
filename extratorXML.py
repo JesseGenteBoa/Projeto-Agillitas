@@ -21,7 +21,6 @@ class ProcessadorXML:
                 except KeyError:
                     nome_fantasia_forn = self.doc["enviNFe"]["NFe"]["infNFe"]["emit"]["xNome"]
 
-
         nome_fantasia_forn = nome_fantasia_forn[:20]
 
         return nome_fantasia_forn

@@ -582,6 +582,7 @@ def lancamentoIsolado(rt):
                         sleep(0.5)
                         continue
                     if type(repentina_etapa_final) == tuple:
+                        print("Sherazard Sonserina")
                         utils.tratarEtapaFinal()
                         break
                     elif type(sem_tela_final) == tuple:

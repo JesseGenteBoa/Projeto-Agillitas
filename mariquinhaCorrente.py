@@ -593,6 +593,7 @@ def robozinho():
                         sleep(0.5)
                         continue
                     if type(repentina_etapa_final) == tuple:
+                        print("Sherazard Sonserina")
                         utils.tratarEtapaFinal()
                         break
                     elif type(sem_tela_final) == tuple:
@@ -606,4 +607,3 @@ def robozinho():
 
     operarLancamento(contador, pular_processo)
     sleep(1)
-
