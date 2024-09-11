@@ -250,12 +250,15 @@ def lancarRetroativo():
 
 
 def tratarEtapaFinal():
-    finalizar_lancamento = encontrarImagemLocalizada(r'Imagens\finalizarLancamento.png')
-    while type(finalizar_lancamento) == tuple:
-        x, y = clicarDuasVezes(r'Imagens\finalizarLancamento.png')
-        sleep(1)
-        finalizar_lancamento = encontrarImagemLocalizada(r'Imagens\clicarSeForOCaso.png')
-        mouseClique(150,100)
+    x, y = clicarDuasVezes(r'Imagens\finalizarLancamento.png')
+    sleep(0.7)
+    while True:
+        moveTo(150,100)
+        quebrar_loop = encontrarImagemLocalizada(r'Imagens\quebrarloop.png')
+        if type(quebrar_loop) != tuple:
+            break
+        else:
+            doubleClick(x, y)
 
 
 def clicarBotaoSair():
