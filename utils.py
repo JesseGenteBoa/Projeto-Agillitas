@@ -55,10 +55,10 @@ def solicitarXML():
     x, y = clicarDuasVezes(r'Imagens\solicitarXML.png')
     sleep(0.5)
     while True:
-        aguardando = encontrarImagemLocalizada(r'Imagens\solicitandoXML.png')
+        aguardando = encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
         if type(aguardando) == tuple:
             while type(aguardando) == tuple:
-                aguardando = encontrarImagemLocalizada(r'Imagens\solicitandoXML.png')
+                aguardando = encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
         else:
             clicar_novamente = encontrarImagemLocalizada(r'Imagens\XMLPendente.png')
             if type(clicar_novamente) == tuple:

@@ -40,38 +40,6 @@ class ProcessadorXML:
         self.valores_do_item.append(valor_unitario)
 
         try:
-            valor_desconto_xml = coletor_xml["vDesc"]
-            valor_desconto_xml = formatador3(valor_desconto_xml)
-        except KeyError:
-            valor_desconto_xml = 0.00
-
-        self.valores_do_item.append(valor_desconto_xml)
-
-        try:
-            valor_frete_xml = coletor_xml["vFrete"]
-            valor_frete_xml = formatador3(valor_frete_xml)
-        except KeyError:
-            valor_frete_xml = 0.00
-
-        self.valores_do_item.append(valor_frete_xml)
-
-        try:
-            valor_seguro_xml = coletor_xml["vSeg"]
-            valor_seguro_xml = formatador3(valor_seguro_xml)
-        except KeyError:
-            valor_seguro_xml = 0.00
-
-        self.valores_do_item.append(valor_seguro_xml)
-
-        try:
-            valor_desp_xml = coletor_xml["vOutro"]
-            valor_desp_xml = formatador3(valor_desp_xml)
-        except KeyError:
-            valor_desp_xml = 0.00
-
-        self.valores_do_item.append(valor_desp_xml)
-
-        try:
             busca_icms_xml = impostos_xml["ICMS"]
             atributos_icms = busca_icms_xml.values()
             atributos_icms = list(atributos_icms)
@@ -138,11 +106,11 @@ class ProcessadorXML:
                 tem_icms = False
                 tem_icms_st = False
                 tem_ipi = False
-                if valores_do_item[cont+7] != 0.00:
-                    cont+=8
+                if valores_do_item[cont+3] != 0.00:
+                    cont+=4
                     tem_icms = True
                 else:
-                    cont+=7
+                    cont+=3
                 if valores_do_item[cont+1] != 0.00:
                     cont+=3
                     tem_icms_st = True

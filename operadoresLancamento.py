@@ -3,15 +3,7 @@ from pyperclip import paste
 from time import sleep
 import pyscreeze
 import utils
-
-
-def escreverValorUnit(valor_unit):
-    press("right")
-    valor_unit = utils.formatador(valor_unit, casas_decimais="{:.6f}")
-    sleep(0.2)
-    write(valor_unit)
-    sleep(0.2)
-    press(["right"]*3)
+    
 
 
 def verificarValorDoItem(lista, indiceX):
@@ -47,7 +39,12 @@ def verificarValorDoItem(lista, indiceX):
             valor_unit_NF = lista[indiceX][2]
             valor_unit_NF = utils.formatador3(valor_unit_NF)
             if quantidade_siga == quantidade_NF:
-                escreverValorUnit(valor_unit_NF)
+                press("right")
+                valor_unit_NF = utils.formatador(valor_unit_NF, casas_decimais="{:.6f}")
+                sleep(0.2)
+                write(valor_unit_NF)
+                sleep(0.2)
+                press(["right"]*3)
             else:
                 valor_unit_NF = utils.formatador(valor_unit_NF, casas_decimais="{:.6f}")
                 cont = 0

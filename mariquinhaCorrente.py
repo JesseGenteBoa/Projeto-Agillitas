@@ -113,7 +113,7 @@ def robozinho():
                         controle_de_repeticao.clear()
                         return robozinho()
                     utils.filtrarPorStatus()
-                    sleep(0.3)
+                    sleep(0.5)
                     press("up")
                     return operarLancamento(contador, pular_processo)
                 
@@ -142,6 +142,7 @@ def robozinho():
                 pular_processo.append(chave_de_acesso)
                 controle_de_repeticao.append(chave_de_acesso)
                 utils.filtrarPorStatus()
+                sleep(0.5)
                 press("down")
                 print("Erro de Chave de Acesso")
                 return operarLancamento(contador, pular_processo)
@@ -163,11 +164,12 @@ def robozinho():
                     return robozinho()
                 except:
                     utils.filtrarPorStatus()
+                    sleep(0.5)
                     press("down")
                     print("Já vi esse, paizão")
                     return operarLancamento(contador, pular_processo)
             except ValueError:
-                caminho = "C:\\Users\\User\\OneDrive - EQS Engenharia Ltda\\Área de Trabalho\\xmlFiscalio\\" + chave_de_acesso + ".xml"
+                caminho = "xmlFiscalio\\" + chave_de_acesso + ".xml"
                 path = Path(caminho)
 
                 if not path.exists():
@@ -187,7 +189,8 @@ def robozinho():
 
                 press("enter", interval=1)
                 press("tab")
-                caminho = "C:\\Users\\User\\OneDrive - EQS Engenharia Ltda\\Área de Trabalho\\xmlFiscalio\\" + chave_de_acesso + ".xml"
+                caminho_absoluto = str(Path('xmlFiscalio').resolve())
+                caminho = fr'{caminho_absoluto}\{chave_de_acesso}.xml'
                 copy(caminho)
                 hotkey("ctrl", "v")
                 sleep(0.7)
@@ -234,7 +237,7 @@ def robozinho():
                         controle_de_repeticao.clear()
                         return robozinho()
                     utils.filtrarPorStatus()
-                    sleep(0.3)
+                    sleep(0.5)
                     press("up")
                     return operarLancamento(contador, pular_processo)
                 
@@ -264,11 +267,12 @@ def robozinho():
                     return robozinho()
                 except:
                     utils.filtrarPorStatus()
+                    sleep(0.5)
                     press("down")
                     print("Já vi esse, paizão")
                     return operarLancamento(contador, pular_processo)
             except:
-                caminho = "C:\\Users\\User\\OneDrive - EQS Engenharia Ltda\\Área de Trabalho\\xmlFiscalio\\" + chave_de_acesso + ".xml"
+                caminho = "xmlFiscalio\\" + chave_de_acesso + ".xml"
                 path = Path(caminho)
                 
                 if not path.exists():
@@ -320,7 +324,7 @@ def robozinho():
                         controle_de_repeticao.clear()
                         return robozinho()
                     utils.filtrarPorStatus()
-                    sleep(0.3)
+                    sleep(0.5)
                     press("up")
                     return operarLancamento(contador, pular_processo)
                 
@@ -349,6 +353,20 @@ def robozinho():
                             impostos_xml = doc["enviNFe"]["NFe"]["infNFe"]["det"]["imposto"]
                             valores_do_item = processador.coletarDadosXML(coletor_xml, impostos_xml)
                             break
+                        except KeyError:
+                            try:
+                                coletor_xml = doc["NFe"]["infNFe"]["det"]["prod"]
+                                impostos_xml = doc["NFe"]["infNFe"]["det"]["imposto"]
+                                valores_do_item = processador.coletarDadosXML(coletor_xml, impostos_xml)
+                                break
+                            except TypeError:
+                                try:
+                                    coletor_xml = doc["NFe"]["infNFe"]["det"][const_item]["prod"]
+                                    impostos_xml = doc["NFe"]["infNFe"]["det"][const_item]["imposto"]
+                                    valores_do_item = processador.coletarDadosXML(coletor_xml, impostos_xml)
+                                    const_item += 1
+                                except IndexError:
+                                    break
                         except TypeError:
                             try:
                                 coletor_xml = doc["enviNFe"]["NFe"]["infNFe"]["det"][const_item]["prod"]
@@ -434,13 +452,21 @@ def robozinho():
                         elif type(prod_bloq) == tuple:
                             print("Problema de produto bloqueado, meu parceirinho", rt, dono_da_rt)
                         utils.filtrarPorStatus()
+                        sleep(0.5)
                         press("down")
                         return operarLancamento(contador, pular_processo)
                     #tem que mandar um E-mail avisando que é um erro
 
+                    erro_cnpj = utils.encontrarImagemLocalizada(r'Imagens\erroEsquisito.png')
+                    if type(erro_cnpj) == tuple:
+                        press("enter")
+                        sleep(1)
+                        utils.aguardar1()
+
                     tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
                     erro_sefaz = utils.encontrarImagem(r'Imagens\naoEncontradaNoSefaz.png')
-                    if type(erro_sefaz) == pyscreeze.Box:
+                    chave_divergente = utils.encontrarImagem(r'Imagens\chaveNaoConfereNF.png')
+                    if type(erro_sefaz) == pyscreeze.Box or type(chave_divergente) == pyscreeze.Box:
                         pular_processo.append(chave_de_acesso)
                         controle_de_repeticao.append(chave_de_acesso)
                         press("enter")
@@ -449,17 +475,24 @@ def robozinho():
                         press("enter")
                         sleep(1)
                         utils.aguardar1()
-                        erro_condicao_pag = utils.esperarAparecer(r'Imagens\erroCondicaoDePagamento.png')
+                        erro_condicao_pag = utils.encontrarImagemLocalizada(r'Imagens\erroCondicaoDePagamento.png')
                         if type(erro_condicao_pag) == tuple:
                             press("enter")
                             sleep(0.5)
+                        erro_generico = utils.encontrarImagemLocalizada(r'Imagens\erroGenerico.png')   
+                        if type(erro_generico) == tuple:
+                            press("enter")
+                            sleep(0.5) 
                         dono_da_rt, rt = utils.copiarRT()
                         utils.filtrarPorStatus()
+                        sleep(0.5)
                         press("down")
-                        if type(erro_condicao_pag) == tuple:
+                        if type(erro_cnpj) == tuple:
+                            print("Erro inconclusivo com o CNPJ", rt, dono_da_rt)
+                        elif type(erro_condicao_pag) == tuple:
                             print("Erro de condição de pagamento, meu patrãozinho", rt, dono_da_rt)
                         else:
-                            print("Chave De Acesso não encontrada, meu patrãozinho", rt, dono_da_rt)
+                            print("Problema com a chave de acesso, meu patrãozinho", rt, dono_da_rt)
                         return operarLancamento(contador, pular_processo)
                     #tem que mandar um E-mail avisando que é erro de chave de acesso não encontrada no Sefaz
 
@@ -472,6 +505,7 @@ def robozinho():
                         sleep(0.7)
                         dono_da_rt, rt = utils.copiarRT()
                         utils.filtrarPorStatus()
+                        sleep(0.5)
                         press("down")
                         print("Problema na NCM, meu parceirinho", rt, dono_da_rt)
                         return operarLancamento(contador, pular_processo)
@@ -499,7 +533,7 @@ def robozinho():
                                                 #SEQUENCIA LOGICA DE LANÇAMENTO SEM IMPOSTO
                     elif ctrl_imposto == 1:
                         for lista in item:
-                            desc_no_item, frete_no_item, seg_no_item, desp_no_item, icms_no_item, bc_icms, aliq_icms, icmsST_no_item, ipi_no_item = lista
+                            icms_no_item, bc_icms, aliq_icms, icmsST_no_item, ipi_no_item = lista
                             operadoresLancamento.definirTES(ctrl_imposto)
                             operadoresLancamento.inserirICMS(icms_no_item, bc_icms, aliq_icms)
                             press(["left"]*9)
@@ -510,7 +544,7 @@ def robozinho():
                                                     #SEQUENCIA LOGICA DE LANÇAMENTO SÓ PARA ICMS
                     elif ctrl_imposto == 2:
                         for lista in item:
-                            desc_no_item, frete_no_item, seg_no_item, desp_no_item, icms_no_item, icmsST_no_item, base_icms_ST, aliq_icms_ST, ipi_no_item = lista
+                            icms_no_item, icmsST_no_item, base_icms_ST, aliq_icms_ST, ipi_no_item = lista
                             operadoresLancamento.definirTES(ctrl_imposto)
                             operadoresLancamento.zerarImposto()
                             operadoresLancamento.inserirICMSST(icmsST_no_item, base_icms_ST, aliq_icms_ST, passosST=9)
@@ -521,7 +555,7 @@ def robozinho():
                                                     #SEQUENCIA LOGICA DE LANÇAMENTO SÓ PARA ICMSST
                     elif ctrl_imposto == 3:
                         for lista in item:
-                            desc_no_item, frete_no_item, seg_no_item, desp_no_item, icms_no_item, icmsST_no_item, ipi_no_item, base_ipi, aliq_ipi = lista
+                            icms_no_item, icmsST_no_item, ipi_no_item, base_ipi, aliq_ipi = lista
                             operadoresLancamento.definirTES(ctrl_imposto)
                             operadoresLancamento.inserirIPI(ipi_no_item, base_ipi, aliq_ipi)
                             operadoresLancamento.zerarImposto()
@@ -532,7 +566,7 @@ def robozinho():
                                                     #SEQUENCIA LOGICA DE LANÇAMENTO SÓ PARA IPI
                     elif ctrl_imposto == 4:
                         for lista in item:
-                            desc_no_item, frete_no_item, seg_no_item, desp_no_item, icms_no_item, icmsST_no_item, base_icms_ST, aliq_icms_ST, ipi_no_item, base_ipi, aliq_ipi = lista
+                            icms_no_item, icmsST_no_item, base_icms_ST, aliq_icms_ST, ipi_no_item, base_ipi, aliq_ipi = lista
                             operadoresLancamento.definirTES(ctrl_imposto)
                             operadoresLancamento.zerarImposto()
                             operadoresLancamento.inserirICMSST(icmsST_no_item, base_icms_ST, aliq_icms_ST, passosST=9)
@@ -544,7 +578,7 @@ def robozinho():
                                                     #SEQUENCIA LOGICA DE LANÇAMENTO SÓ PARA ICMSST E IPI
                     elif ctrl_imposto == 5:
                         for lista in item:
-                            desc_no_item, frete_no_item, seg_no_item, desp_no_item, icms_no_item, base_icms, aliq_icms, icmsST_no_item, ipi_no_item, base_ipi, aliq_ipi = lista
+                            icms_no_item, base_icms, aliq_icms, icmsST_no_item, ipi_no_item, base_ipi, aliq_ipi = lista
                             operadoresLancamento.definirTES(ctrl_imposto)
                             operadoresLancamento.inserirICMS(icms_no_item, base_icms, aliq_icms)
                             operadoresLancamento.inserirIPI(ipi_no_item, base_ipi, aliq_ipi, passosIPI=3)
@@ -555,7 +589,7 @@ def robozinho():
                                                     #SEQUENCIA LOGICA DE LANÇAMENTO SÓ PARA ICMS E IPI
                     elif ctrl_imposto == 6:
                         for lista in item:
-                            desc_no_item, frete_no_item, seg_no_item, desp_no_item, icms_no_item, base_icms, aliq_icms, icmsST_no_item, base_icms_ST, aliq_icms_ST, ipi_no_item = lista
+                            icms_no_item, base_icms, aliq_icms, icmsST_no_item, base_icms_ST, aliq_icms_ST, ipi_no_item = lista
                             operadoresLancamento.definirTES(ctrl_imposto)
                             operadoresLancamento.inserirICMS(icms_no_item, base_icms, aliq_icms)
                             operadoresLancamento.inserirICMSST(icmsST_no_item, base_icms_ST, aliq_icms_ST, passosST=0)
@@ -566,7 +600,7 @@ def robozinho():
                                                     #SEQUENCIA LOGICA DE LANÇAMENTO SÓ PARA ICMS E ICMSST
                     elif ctrl_imposto == 7:
                         for lista in item:
-                            desc_no_item, frete_no_item, seg_no_item, desp_no_item, icms_no_item, base_icms, aliq_icms, icmsST_no_item, base_icms_ST, aliq_icms_ST, ipi_no_item, base_ipi, aliq_ipi = lista
+                            icms_no_item, base_icms, aliq_icms, icmsST_no_item, base_icms_ST, aliq_icms_ST, ipi_no_item, base_ipi, aliq_ipi = lista
                             operadoresLancamento.definirTES(ctrl_imposto)
                             operadoresLancamento.inserirICMS(icms_no_item, base_icms, aliq_icms)
                             operadoresLancamento.inserirICMSST(icmsST_no_item, base_icms_ST, aliq_icms_ST, passosST=0)
@@ -607,3 +641,4 @@ def robozinho():
 
     operarLancamento(contador, pular_processo)
     sleep(1)
+
