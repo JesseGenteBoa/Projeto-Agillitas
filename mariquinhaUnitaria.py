@@ -21,6 +21,18 @@ controle_de_repeticao = []
 
 
 def lancamentoIsolado(rt):
+    dono_da_rt = []
+    chave_inconforme = []
+    sem_xml = []
+    rt_contador = []
+    xml_ilegivel = []
+    cond_pag = []
+    bloqueado = []
+    cnpj_inconclusivo = []
+    chave_sefaz =[]
+    ncm_problematica = []
+    cc_bloq = []
+
     utils.clicarMicrosiga()
     sleep(0.5)
     filtrar_pendentes = utils.encontrarImagemLocalizada(r'Imagens\filtrarPendentes.png')
@@ -81,6 +93,12 @@ def lancamentoIsolado(rt):
                 pular_processo.clear()
                 controle_de_repeticao.clear()
                 print("Erro de CC")
+                if not rt_contador:
+                    autor_da_rt, rt = utils.copiarRT(passos=1)
+                    dono_da_rt.append(autor_da_rt)
+                    rt_contador.append(rt)
+                    cc_bloq.append(rt)
+                utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                 raise FailSafeException
             
             repentina_etapa_final = utils.encontrarImagem(r'Imagens\etapaFinal.png')
@@ -109,8 +127,15 @@ def lancamentoIsolado(rt):
                     if contador == 2:
                         utils.tabEEnter()
                         sleep(2)
+                        repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
+                        while type(repetir_acao) == tuple:
+                            press("enter")
+                            repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
                         pular_processo.clear()
                         controle_de_repeticao.clear()
+                        print(rt_contador)
+                        if rt_contador:
+                            utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                         raise FailSafeException
                     utils.filtrarPorStatus()
                     sleep(0.3)
@@ -123,6 +148,8 @@ def lancamentoIsolado(rt):
                 utils.clicarBotaoSair()
                 pular_processo.clear()
                 controle_de_repeticao.clear()
+                if rt_contador:
+                    utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                 raise FailSafeException
             
             else:
@@ -141,10 +168,15 @@ def lancamentoIsolado(rt):
             if processo_feito_errado == True:
                 pular_processo.append(chave_de_acesso)
                 controle_de_repeticao.append(chave_de_acesso)
+                print("Erro de Chave de Acesso")
+                if not rt_contador:
+                    autor_da_rt, rt = utils.copiarRT(passos=4)
+                    dono_da_rt.append(autor_da_rt)
+                    rt_contador.append(rt)
+                chave_inconforme.append(rt_contador)
                 utils.filtrarPorStatus()
                 sleep(0.5)
                 press("down")
-                print("Erro de Chave de Acesso")
                 return operarLancamento(contador, pular_processo)
             
             try:
@@ -156,6 +188,8 @@ def lancamentoIsolado(rt):
                     press("enter")
                     sleep(1)
                     controle_de_repeticao.clear()
+                    if rt_contador:
+                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                     raise FailSafeException
                 except:
                     utils.filtrarPorStatus()
@@ -170,8 +204,12 @@ def lancamentoIsolado(rt):
                 if not path.exists():
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
+                    if not rt_contador:
+                        autor_da_rt, rt = utils.copiarRT(passos=4)
+                        dono_da_rt.append(autor_da_rt)
+                        rt_contador.append(rt)
                     utils.tratarCasoXML()
-                    #Disparar E-mail NÃO POSSUO O XML
+                    sem_xml.append(rt_contador)
                     return operarLancamento(contador, pular_processo)
                 
                 x, y = utils.clicarDuasVezes(r'Imagens\solicitarXML.png')
@@ -197,8 +235,12 @@ def lancamentoIsolado(rt):
                     press("enter")
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
+                    if not rt_contador:
+                        autor_da_rt, rt = utils.copiarRT(passos=4)
+                        dono_da_rt.append(autor_da_rt)
+                        rt_contador.append(rt)
                     utils.tratarCasoXML()
-                    #disparar E-mail ERRO NA LEITURA DO ARQUIVO
+                    xml_ilegivel.append(rt_contador)
                     return operarLancamento(contador, pular_processo)
                 utils.filtrarPorStatus()
                 return operarLancamento(contador, pular_processo)
@@ -228,8 +270,14 @@ def lancamentoIsolado(rt):
                     if contador == 2:
                         utils.tabEEnter()
                         sleep(2)
+                        repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
+                        while type(repetir_acao) == tuple:
+                            press("enter")
+                            repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
                         pular_processo.clear()
                         controle_de_repeticao.clear()
+                        if rt_contador:
+                            utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                         raise FailSafeException
                     utils.filtrarPorStatus()
                     sleep(0.5)
@@ -242,6 +290,8 @@ def lancamentoIsolado(rt):
                 utils.clicarBotaoSair()
                 pular_processo.clear()
                 controle_de_repeticao.clear()
+                if rt_contador:
+                    utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                 raise FailSafeException
             
             try:
@@ -254,6 +304,8 @@ def lancamentoIsolado(rt):
                     sleep(1)
                     controle_de_repeticao.clear()
                     pular_processo.clear()
+                    if rt_contador:
+                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                     raise FailSafeException
                 except:
                     utils.filtrarPorStatus()
@@ -264,11 +316,14 @@ def lancamentoIsolado(rt):
             except:
                 caminho = "xmlFiscalio\\" + chave_de_acesso + ".xml"
                 path = Path(caminho)
-                
                 if not path.exists():
                     pular_processo.append(chave_de_acesso)
+                    if not rt_contador:
+                        autor_da_rt, rt = utils.copiarRT(passos=4)
+                        dono_da_rt.append(autor_da_rt)
+                        rt_contador.append(rt)
                     utils.tratarCasoXML()
-                    #disparar E-mail
+                    sem_xml.append(rt_contador)
                     return operarLancamento(contador, pular_processo)
                 
                 try:
@@ -278,14 +333,14 @@ def lancamentoIsolado(rt):
                     with open(caminho, encoding='utf-8') as fd:
                         doc = xmltodict.parse(fd.read())
                 except:
-                    dono_da_rt, rt = utils.copiarRT(passos=4)
-                    utils.filtrarPorStatus()
                     sleep(0.5)
                     controle_de_repeticao.append(chave_de_acesso)
                     pular_processo.append(chave_de_acesso)
-                    print("Não consigo ler esse XML, paizão", rt, dono_da_rt)
-                    press("down")
-                    #Disparar E-mail
+                    if not rt_contador:
+                        autor_da_rt, rt = utils.copiarRT(passos=4)
+                        dono_da_rt.append(autor_da_rt)
+                        rt_contador.append(rt)
+                    xml_ilegivel.append(rt_contador)
                     return operarLancamento(contador, pular_processo)
                      
             estado_do_caixa = utils.clicarEmLancar()
@@ -310,8 +365,14 @@ def lancamentoIsolado(rt):
                     if contador == 2:
                         utils.tabEEnter()
                         sleep(2)
+                        repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
+                        while type(repetir_acao) == tuple:
+                            press("enter")
+                            repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
                         pular_processo.clear()
                         controle_de_repeticao.clear()
+                        if rt_contador:
+                            utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                         raise FailSafeException
                     utils.filtrarPorStatus()
                     sleep(0.5)
@@ -324,6 +385,8 @@ def lancamentoIsolado(rt):
                 utils.clicarBotaoSair()
                 pular_processo.clear()
                 controle_de_repeticao.clear()
+                if rt_contador:
+                    utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                 raise FailSafeException
             
             else:
@@ -420,6 +483,12 @@ def lancamentoIsolado(rt):
                         pular_processo.clear()
                         controle_de_repeticao.clear()
                         print("Erro de CC")
+                        if not rt_contador:
+                            autor_da_rt, rt = utils.copiarRT(passos=1)
+                            dono_da_rt.append(autor_da_rt)
+                            rt_contador.append(rt)
+                            cc_bloq.append(rt)
+                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                         raise FailSafeException
                     #tem que mandar um E-mail avisando que é erro de CC bloqueado
 
@@ -436,11 +505,12 @@ def lancamentoIsolado(rt):
                         if type(prod_bloq) == tuple or type(erro_condicao_pag) == tuple:
                             press("enter")
                             sleep(0.5)
-                            dono_da_rt, rt = utils.copiarRT()
+                            autor_da_rt, rt = utils.copiarRT()
+                            dono_da_rt.append(autor_da_rt)
                         if type(erro_condicao_pag) == tuple:
-                            print("Erro de condição de pagamento, meu patrãozinho", rt, dono_da_rt)
+                            print("Erro de condição de pagamento, meu patrãozinho")
                         elif type(prod_bloq) == tuple:
-                            print("Problema de produto bloqueado, meu parceirinho", rt, dono_da_rt)
+                            print("Problema de produto bloqueado, meu parceirinho")
                         utils.filtrarPorStatus()
                         sleep(0.5)
                         press("down")
@@ -473,16 +543,17 @@ def lancamentoIsolado(rt):
                         if type(erro_generico) == tuple:
                             press("enter")
                             sleep(0.5) 
-                        dono_da_rt, rt = utils.copiarRT()
+                        autor_da_rt, rt = utils.copiarRT()
+                        dono_da_rt.append(autor_da_rt)
                         utils.filtrarPorStatus()
                         sleep(0.5)
                         press("down")
                         if type(erro_cnpj) == tuple:
-                            print("Erro inconclusivo com o CNPJ", rt, dono_da_rt)
+                            print("Erro inconclusivo com o CNPJ")
                         elif type(erro_condicao_pag) == tuple:
-                            print("Erro de condição de pagamento, meu patrãozinho", rt, dono_da_rt)
+                            print("Erro de condição de pagamento, meu patrãozinho")
                         else:
-                            print("Problema com a chave de acesso, meu patrãozinho", rt, dono_da_rt)
+                            print("Problema com a chave de acesso, meu patrãozinho")
                         return operarLancamento(contador, pular_processo)
                     #tem que mandar um E-mail avisando que é erro de chave de acesso não encontrada no Sefaz
 
@@ -493,11 +564,12 @@ def lancamentoIsolado(rt):
                         controle_de_repeticao.append(chave_de_acesso)
                         press("esc")
                         sleep(0.7)
-                        dono_da_rt, rt = utils.copiarRT()
+                        autor_da_rt, rt = utils.copiarRT()
+                        dono_da_rt.append(autor_da_rt)
                         utils.filtrarPorStatus()
                         sleep(0.5)
                         press("down")
-                        print("Problema na NCM, meu parceirinho", rt, dono_da_rt)
+                        print("Problema na NCM, meu parceirinho")
                         return operarLancamento(contador, pular_processo)
                     #tem que mandar um E-mail avisando que é um erro de NCM
                     
@@ -630,5 +702,4 @@ def lancamentoIsolado(rt):
 
     operarLancamento(contador, pular_processo)
     sleep(1)
-
 

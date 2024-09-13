@@ -17,9 +17,16 @@ class ProcessadorXML:
                 nome_fantasia_forn = self.doc["enviNFe"]["NFe"]["infNFe"]["emit"]["xFant"]
             except KeyError:
                 try:
-                    nome_fantasia_forn = self.doc["nfeProc"]["NFe"]["infNFe"]["emit"]["xNome"]
+                    nome_fantasia_forn = self.doc["NFe"]["infNFe"]["emit"]["xFant"]
                 except KeyError:
-                    nome_fantasia_forn = self.doc["enviNFe"]["NFe"]["infNFe"]["emit"]["xNome"]
+                    try:
+                        nome_fantasia_forn = self.doc["nfeProc"]["NFe"]["infNFe"]["emit"]["xNome"]
+                    except KeyError:
+                        try:
+                            nome_fantasia_forn = self.doc["enviNFe"]["NFe"]["infNFe"]["emit"]["xNome"]
+                        except KeyError:
+                            nome_fantasia_forn = self.doc["NFe"]["infNFe"]["emit"]["xNome"]
+
 
         nome_fantasia_forn = nome_fantasia_forn[:20]
 

@@ -22,6 +22,16 @@ controle_de_repeticao = []
 
 def robozinho():
     sleep(0.5)
+    chave_inconforme = []
+    sem_xml = []
+    rt_contador = []
+    xml_ilegivel = []
+    cond_pag = []
+    bloqueado = []
+    cnpj_inconclusivo = []
+    chave_sefaz =[]
+    ncm_problematica = []
+    cc_bloq = []
 
     try:
         filtrar_pendentes = utils.encontrarImagemLocalizada(r'Imagens\filtrarPendentes.png')
@@ -81,6 +91,11 @@ def robozinho():
                 pular_processo.clear()
                 controle_de_repeticao.clear()
                 print("Erro de CC")
+                if not rt_contador:
+                    dono_da_rt, rt = utils.copiarRT(passos=1)
+                    rt_contador.append(rt)
+                    cc_bloq.append(rt)
+                utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                 return robozinho()
             
             repentina_etapa_final = utils.encontrarImagem(r'Imagens\etapaFinal.png')
@@ -109,8 +124,14 @@ def robozinho():
                     if contador == 2:
                         utils.tabEEnter()
                         sleep(2)
+                        repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
+                        while type(repetir_acao) == tuple:
+                            press("enter")
+                            repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
                         pular_processo.clear()
                         controle_de_repeticao.clear()
+                        if rt_contador:
+                            utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                         return robozinho()
                     utils.filtrarPorStatus()
                     sleep(0.5)
@@ -123,6 +144,8 @@ def robozinho():
                 utils.clicarBotaoSair()
                 pular_processo.clear()
                 controle_de_repeticao.clear()
+                if rt_contador:
+                    utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                 return robozinho()
             
             else:
@@ -141,10 +164,14 @@ def robozinho():
             if processo_feito_errado == True:
                 pular_processo.append(chave_de_acesso)
                 controle_de_repeticao.append(chave_de_acesso)
+                print("Erro de Chave de Acesso")
+                if not rt_contador:
+                    dono_da_rt, rt = utils.copiarRT(passos=4)
+                    rt_contador.append(rt)
+                chave_inconforme.append(rt_contador)
                 utils.filtrarPorStatus()
                 sleep(0.5)
                 press("down")
-                print("Erro de Chave de Acesso")
                 return operarLancamento(contador, pular_processo)
             
             try:
@@ -161,6 +188,8 @@ def robozinho():
                     sleep(0.7)
                     press("down")
                     controle_de_repeticao.clear()
+                    if rt_contador:
+                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                     return robozinho()
                 except:
                     utils.filtrarPorStatus()
@@ -175,8 +204,11 @@ def robozinho():
                 if not path.exists():
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
+                    if not rt_contador:
+                        dono_da_rt, rt = utils.copiarRT(passos=4)
+                        rt_contador.append(rt)
                     utils.tratarCasoXML()
-                    #Disparar E-mail NÃO POSSUO O XML
+                    sem_xml.append(rt_contador)
                     return operarLancamento(contador, pular_processo)
                 
                 x, y = utils.clicarDuasVezes(r'Imagens\solicitarXML.png')
@@ -202,8 +234,11 @@ def robozinho():
                     press("enter")
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
+                    if not rt_contador:
+                        dono_da_rt, rt = utils.copiarRT(passos=4)
+                        rt_contador.append(rt)
                     utils.tratarCasoXML()
-                    #disparar E-mail ERRO NA LEITURA DO ARQUIVO
+                    xml_ilegivel.append(rt_contador)
                     return operarLancamento(contador, pular_processo)
                 utils.filtrarPorStatus()
                 return operarLancamento(contador, pular_processo)
@@ -233,8 +268,14 @@ def robozinho():
                     if contador == 2:
                         utils.tabEEnter()
                         sleep(2)
+                        repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
+                        while type(repetir_acao) == tuple:
+                            press("enter")
+                            repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
                         pular_processo.clear()
                         controle_de_repeticao.clear()
+                        if rt_contador:
+                            utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                         return robozinho()
                     utils.filtrarPorStatus()
                     sleep(0.5)
@@ -247,6 +288,8 @@ def robozinho():
                 utils.clicarBotaoSair()
                 pular_processo.clear()
                 controle_de_repeticao.clear()
+                if rt_contador:
+                    utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                 return robozinho()
             
             try:
@@ -264,6 +307,8 @@ def robozinho():
                     press("down")
                     controle_de_repeticao.clear()
                     pular_processo.clear()
+                    if rt_contador:
+                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                     return robozinho()
                 except:
                     utils.filtrarPorStatus()
@@ -277,8 +322,11 @@ def robozinho():
                 
                 if not path.exists():
                     pular_processo.append(chave_de_acesso)
+                    if not rt_contador:
+                        dono_da_rt, rt = utils.copiarRT(passos=4)
+                        rt_contador.append(rt)
                     utils.tratarCasoXML()
-                    #disparar E-mail
+                    sem_xml.append(rt_contador)
                     return operarLancamento(contador, pular_processo)
                 
                 try:
@@ -288,13 +336,15 @@ def robozinho():
                     with open(caminho, encoding='utf-8') as fd:
                         doc = xmltodict.parse(fd.read())
                 except:
-                    dono_da_rt, rt = utils.copiarRT(passos=4)
+                    if not rt_contador:
+                        dono_da_rt, rt = utils.copiarRT(passos=4)
+                        rt_contador.append(rt)
+                    xml_ilegivel.append(rt_contador)
                     utils.filtrarPorStatus()
                     controle_de_repeticao.append(chave_de_acesso)
                     pular_processo.append(chave_de_acesso)
-                    print("Não consigo ler esse XML, paizão", rt, dono_da_rt)
+                    print("Não consigo ler esse XML, paizão")
                     press("down")
-                    #Disparar E-mail
                     return operarLancamento(contador, pular_processo)
                 
                 
@@ -320,8 +370,14 @@ def robozinho():
                     if contador == 2:
                         utils.tabEEnter()
                         sleep(2)
+                        repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
+                        while type(repetir_acao) == tuple:
+                            press("enter")
+                            repetir_acao = utils.encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
                         pular_processo.clear()
                         controle_de_repeticao.clear()
+                        if rt_contador:
+                            utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                         return robozinho()
                     utils.filtrarPorStatus()
                     sleep(0.5)
@@ -334,6 +390,8 @@ def robozinho():
                 utils.clicarBotaoSair()
                 pular_processo.clear()
                 controle_de_repeticao.clear()
+                if rt_contador:
+                    utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                 return robozinho()
             
             else:
@@ -430,6 +488,11 @@ def robozinho():
                         pular_processo.clear()
                         controle_de_repeticao.clear()
                         print("Erro de CC")
+                        if not rt_contador:
+                            dono_da_rt, rt = utils.copiarRT(passos=1)
+                            rt_contador.append(rt)
+                            cc_bloq.append(rt)
+                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                         return robozinho()
                     #tem que mandar um E-mail avisando que é erro de CC bloqueado
 
@@ -446,11 +509,15 @@ def robozinho():
                         if type(prod_bloq) == tuple or type(erro_condicao_pag) == tuple:
                             press("enter")
                             sleep(0.5)
-                            dono_da_rt, rt = utils.copiarRT()
+                            if not rt_contador:
+                                dono_da_rt, rt = utils.copiarRT()
+                                rt_contador.append(rt)
                         if type(erro_condicao_pag) == tuple:
-                            print("Erro de condição de pagamento, meu patrãozinho", rt, dono_da_rt)
+                            cond_pag.append(rt_contador)
+                            print("Erro de condição de pagamento, meu patrãozinho")
                         elif type(prod_bloq) == tuple:
-                            print("Problema de produto bloqueado, meu parceirinho", rt, dono_da_rt)
+                            bloqueado.append(rt_contador)
+                            print("Problema de produto bloqueado, meu parceirinho")
                         utils.filtrarPorStatus()
                         sleep(0.5)
                         press("down")
@@ -483,16 +550,21 @@ def robozinho():
                         if type(erro_generico) == tuple:
                             press("enter")
                             sleep(0.5) 
-                        dono_da_rt, rt = utils.copiarRT()
+                        if not rt_contador:
+                            dono_da_rt, rt = utils.copiarRT()
+                            rt_contador.append(rt)
                         utils.filtrarPorStatus()
                         sleep(0.5)
                         press("down")
                         if type(erro_cnpj) == tuple:
-                            print("Erro inconclusivo com o CNPJ", rt, dono_da_rt)
+                            cnpj_inconclusivo.append(rt_contador)
+                            print("Erro inconclusivo com o CNPJ")
                         elif type(erro_condicao_pag) == tuple:
-                            print("Erro de condição de pagamento, meu patrãozinho", rt, dono_da_rt)
+                            cond_pag.append(rt_contador)
+                            print("Erro de condição de pagamento, meu patrãozinho")
                         else:
-                            print("Problema com a chave de acesso, meu patrãozinho", rt, dono_da_rt)
+                            chave_sefaz.append(rt_contador)
+                            print("Problema com a chave de acesso, meu patrãozinho")
                         return operarLancamento(contador, pular_processo)
                     #tem que mandar um E-mail avisando que é erro de chave de acesso não encontrada no Sefaz
 
@@ -503,11 +575,14 @@ def robozinho():
                         controle_de_repeticao.append(chave_de_acesso)
                         press("esc")
                         sleep(0.7)
-                        dono_da_rt, rt = utils.copiarRT()
+                        if not rt_contador:
+                            dono_da_rt, rt = utils.copiarRT()
+                            rt_contador.append(rt)
                         utils.filtrarPorStatus()
                         sleep(0.5)
                         press("down")
-                        print("Problema na NCM, meu parceirinho", rt, dono_da_rt)
+                        ncm_problematica.append(rt_contador)
+                        print("Problema na NCM, meu parceirinho")
                         return operarLancamento(contador, pular_processo)
                     #tem que mandar um E-mail avisando que é um erro de NCM
                     
@@ -627,7 +702,6 @@ def robozinho():
                         sleep(0.5)
                         continue
                     if type(repentina_etapa_final) == tuple:
-                        print("Sherazard Sonserina")
                         utils.tratarEtapaFinal()
                         break
                     elif type(sem_tela_final) == tuple:
@@ -641,4 +715,3 @@ def robozinho():
 
     operarLancamento(contador, pular_processo)
     sleep(1)
-

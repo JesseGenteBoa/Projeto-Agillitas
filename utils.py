@@ -2,10 +2,104 @@ from pyautogui import locateOnScreen, locateCenterOnScreen, hotkey, press, posit
 from pydirectinput import click as mouseClique, moveTo, doubleClick                        
 from pyperclip import paste, copy
 from time import sleep
+from email.message import EmailMessage
 import pyscreeze
+import smtplib
 
 
 FAILSAFE = True
+
+def enviarEmail(rt, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica):
+    mensagens = []
+
+    if len(ncm_problematica) > 0:
+        mensagem_ncm = f"{len(ncm_problematica)} processo(s) onde o sistema aponta que a chave de acesso não foi encontrada no SEFAZ."
+    else:
+        mensagem_ncm = ""
+    mensagens.append(mensagem_ncm)
+
+    if len(chave_sefaz) > 0:
+        mensagem_chave = f"{len(chave_sefaz)} processo(s) onde o sistema aponta que a chave de acesso não foi encontrada no SEFAZ."
+    else:
+        mensagem_chave = ""
+    mensagens.append(mensagem_chave)
+
+    if len(sem_xml) > 0:
+        mensagem_xml_aus = f"{len(sem_xml)} processo(s) que não tenho o XML no meu repositório."
+    else:
+        mensagem_xml_aus = ""
+    mensagens.append(mensagem_xml_aus)
+
+    if len(cond_pag) > 0:
+        mensagem_cond_pag = f"{len(cond_pag)} processo(s) com erro na condição de pagamento."
+    else:
+        mensagem_cond_pag = ""
+    mensagens.append(mensagem_cond_pag)
+
+    if len(cnpj_inconclusivo) > 0:
+        mensagem_cnpj = f"{len(cnpj_inconclusivo)} processo(s) onde o sistema aponta um erro no CNPJ."
+    else:
+        mensagem_cnpj = ""
+    mensagens.append(mensagem_cnpj)
+
+    if len(chave_inconforme) > 0:
+        mensagem_ch_inc = f"{len(chave_inconforme)} processo(s) com uma chave de acesso impossível."
+    else:
+        mensagem_ch_inc = ""
+    mensagens.append(mensagem_ch_inc)
+
+    if len(cc_bloq) > 0:
+        mensagem_cc = f"{len(cc_bloq)} processo(s) com o centro de custo bloqueado."
+    else:
+        mensagem_cc = ""
+    mensagens.append(mensagem_cc)
+
+    if len(xml_ilegivel) > 0:
+        mensagem_xml = f"{len(xml_ilegivel)} processo(s) com um XML ilegível para mim."
+    else:
+        mensagem_xml = ""
+    mensagens.append(mensagem_xml)
+
+    if len(bloqueado) > 0:
+        mensagem_bloq = f"{len(bloqueado)} processo(s) com um item bloqueado."
+    else:
+        mensagem_bloq = ""
+    mensagens.append(mensagem_bloq)
+
+    mensagem = [str(elemento) for elemento in mensagens if elemento != ""]
+    string = "\n".join(mensagem)
+
+
+    corpo = f"""
+        Olá, colaborador!
+
+ 
+        Não consegui finalizar a {rt[0]} - {dono_da_rt[0]}
+
+        Causa:
+        {string}
+        
+
+        Pode me ajudar?
+        
+        Atenciosamente,
+        Mariquinha,
+        """
+    
+    carta = EmailMessage()
+    carta.set_content(corpo)
+    carta['Subject'] = "RT para verificar"
+    carta['From'] = "bot.contabil@eqseng.com.br"
+    carta['To'] = "jesse.silva@eqsengenharia.com.br"
+
+    try:
+        with smtplib.SMTP_SSL('mail.eqseng.com.br', 465) as servidor:
+            servidor.login("bot.contabil@eqseng.com.br", "EQSeng852@")
+            servidor.send_message(carta)
+    except Exception as e:
+        pass
+ 
+
 
 def encontrarImagem(imagem):
     cont = 0
@@ -159,8 +253,7 @@ def copiarChaveDeAcesso(controle_de_repeticao):
     return chave_de_acesso, processo_feito_errado
 
 
-def rejeitarCaixa(mensagem = "Centro de Custo Bloqueado.", passos=1):
-    dono_da_rt, rt = copiarRT(passos)
+def rejeitarCaixa():
     campo_mensagem = encontrarImagemLocalizada(r'Imagens\campoObservacaoRejeicao.png')
 
     while type(campo_mensagem) != tuple:
@@ -192,7 +285,8 @@ def rejeitarCaixa(mensagem = "Centro de Custo Bloqueado.", passos=1):
                         break
         moveTo(150,100)
 
-    mensagem = copy(mensagem)
+    mensagem = "Centro de Custo Bloqueado.",
+    copy(mensagem)
     hotkey("ctrl", "v")
     press("tab")
     press("enter")
@@ -203,7 +297,6 @@ def rejeitarCaixa(mensagem = "Centro de Custo Bloqueado.", passos=1):
         aux_cont+=1
         if aux_cont == 0:
             break
-        #Enviar E-mail com a RT de centro de custo bloqueado
 
 
 def copiarRT(passos=1):
@@ -293,10 +386,9 @@ def clicarEmFinalizar():
 
 
 def tratarCasoXML():
-    dono_da_rt, rt = copiarRT(passos=4)
     filtrarPorStatus()
     press("down")
-    print("Não tenho essa XML, meu nobre", rt, dono_da_rt)
+    print("Não tenho essa XML, meu nobre")
     #enviar Email
 
 
