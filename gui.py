@@ -4,6 +4,7 @@ from mariquinhaCorrente import robozinho
 from mariquinhaUnitaria import lancamentoIsolado
 from utils import clicarMicrosiga
 from time import sleep
+import mensagens
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -47,6 +48,15 @@ def abrirGui():
 
 
     window = Tk()
+
+    bot = mensagens.Mensagens(window)
+
+    bot.mostrarInfo(bot.info, bot.texto)
+    bot.mostrarInfo(bot.info2, bot.texto2)
+    bot.mostrarInfo(bot.info3, bot.texto3)
+    bot.mostrarAviso(bot.info4, bot.texto4)
+
+    window.deiconify()
 
     vcmd = (window.register(validarEntrada), '%P')
 
