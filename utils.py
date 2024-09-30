@@ -9,20 +9,20 @@ import smtplib
 
 FAILSAFE = True
 
-def enviarEmail(rt, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica):
+def enviarEmail(rt, dono_da_rt, sem_xml, chave_inconforme, xml_ilegivel, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica):
     mensagens = []
-
-    if len(ncm_problematica) > 0:
-        mensagem_ncm = f"{len(ncm_problematica)} processo(s) onde o sistema aponta que a chave de acesso não foi encontrada no SEFAZ."
-    else:
-        mensagem_ncm = ""
-    mensagens.append(mensagem_ncm)
-
+    
     if len(chave_sefaz) > 0:
         mensagem_chave = f"{len(chave_sefaz)} processo(s) onde o sistema aponta que a chave de acesso não foi encontrada no SEFAZ."
     else:
         mensagem_chave = ""
     mensagens.append(mensagem_chave)
+
+    if len(ncm_problematica) > 0:
+        mensagem_ncm = f"{len(ncm_problematica)} processo(s) onde o sistema aponta que a NCM está incorreta."
+    else:
+        mensagem_ncm = ""
+    mensagens.append(mensagem_ncm)
 
     if len(sem_xml) > 0:
         mensagem_xml_aus = f"{len(sem_xml)} processo(s) que não tenho o XML no meu repositório."
@@ -48,12 +48,6 @@ def enviarEmail(rt, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel
         mensagem_ch_inc = ""
     mensagens.append(mensagem_ch_inc)
 
-    if len(cc_bloq) > 0:
-        mensagem_cc = f"{len(cc_bloq)} processo(s) com o centro de custo bloqueado."
-    else:
-        mensagem_cc = ""
-    mensagens.append(mensagem_cc)
-
     if len(xml_ilegivel) > 0:
         mensagem_xml = f"{len(xml_ilegivel)} processo(s) com um XML ilegível para mim."
     else:
@@ -71,26 +65,26 @@ def enviarEmail(rt, dono_da_rt, sem_xml, chave_inconforme, cc_bloq, xml_ilegivel
 
 
     corpo = f"""
-        Olá, colaborador!
+    Olá, colaborador!
 
  
-        Não consegui finalizar a {rt[0]} - {dono_da_rt[0]}
+    Não consegui finalizar a {rt[0]} - {dono_da_rt[0]}                 
 
-        Causa:
-        {string}
-        
+    Causa:
+    {string}
+    
 
-        Pode me ajudar?
-        
-        Atenciosamente,
-        Mariquinha,
-        """
+    Pode me ajudar?
+    
+    Atenciosamente,
+    Mariquinha,
+    """
     
     carta = EmailMessage()
     carta.set_content(corpo)
     carta['Subject'] = "RT para verificar"
     carta['From'] = "bot.contabil@eqseng.com.br"
-    carta['To'] = "jesse.silva@eqsengenharia.com.br"
+    carta['To'] = "jesse.silva@eqsengenharia.com.br, caixa@eqsengenharia.com.br"
 
     try:
         with smtplib.SMTP_SSL('mail.eqseng.com.br', 465) as servidor:
@@ -132,6 +126,7 @@ def encontrarImagemLocalizada(imagem):
 
 
 def filtrarPorStatus(imagem=r'Imagens\statusNegrito.png'):
+    caixa_finalizado = ''
     try:
         x, y = encontrarImagemLocalizada(imagem)
     except TypeError:
@@ -140,15 +135,27 @@ def filtrarPorStatus(imagem=r'Imagens\statusNegrito.png'):
     sleep(1)
     doubleClick(x, y)
     sleep(1)
-    repetir_clique = encontrarImagemLocalizada(r'Imagens\aindaNaoETempo.png')
-    if type(repetir_clique) == tuple:
+    caixa_finalizado = encontrarImagemLocalizada(r'Imagens\aindaNaoETempo.png')
+    if type(caixa_finalizado) == tuple:
         doubleClick(x, y)
+        caixa_finalizado = encontrarImagemLocalizada(r'Imagens\aindaNaoETempo.png')
+        sleep(0.5)
+    return caixa_finalizado
 
 
 def solicitarXML():
     x, y = clicarDuasVezes(r'Imagens\solicitarXML.png')
+    nf_cancelada = ""
+    falsa_duplicidade = ""
     sleep(0.5)
     while True:
+        nf_cancelada = encontrarImagemLocalizada(r'Imagens\nfCancelada.png')
+        falsa_duplicidade = encontrarImagemLocalizada(r'Imagens\falsaDuplicidade.png')
+        if type(nf_cancelada) == tuple or type(falsa_duplicidade) == tuple:
+            press("right", interval=0.05)
+            press("enter")
+            sleep(0.5)
+            break
         aguardando = encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
         if type(aguardando) == tuple:
             while type(aguardando) == tuple:
@@ -160,6 +167,7 @@ def solicitarXML():
             else:
                 break
     sleep(1)
+    return nf_cancelada, falsa_duplicidade
     
 
 def verificarStatus():
@@ -209,7 +217,7 @@ def clicarEmLancar():
         aguarde1, aguarde2 = aguardar2()
         if type(aguarde1) != tuple and type(aguarde2) != tuple:
             doubleClick(x,y)
-    sleep(0.5)
+    sleep(1)
 
     caixa_finalizado = encontrarImagem(r'Imagens\jaLancado.png')
     if type(caixa_finalizado) == pyscreeze.Box:
@@ -219,7 +227,7 @@ def clicarEmLancar():
     return caixa_finalizado
 
 
-def copiarChaveDeAcesso(controle_de_repeticao):
+def copiarChaveDeAcesso():
     processo_feito_errado = False
     x, y = clicarDuasVezes(r'Imagens\copiarChaveDeAcesso.png')
     sleep(1)
@@ -239,21 +247,15 @@ def copiarChaveDeAcesso(controle_de_repeticao):
     hotkey("ctrl", "c")
     chave_de_acesso = paste()
     chave_de_acesso = chave_de_acesso.replace(" ", "")
-
-    try:
-        verificador = controle_de_repeticao.index(chave_de_acesso)
-        processo_feito_errado = False
-    except:
-        if len(chave_de_acesso) != 44:
-            processo_feito_errado = True
-
+    if len(chave_de_acesso) != 44:
+        processo_feito_errado = True
     sleep(0.5)
     press("esc")
     sleep(2)
     return chave_de_acesso, processo_feito_errado
 
 
-def rejeitarCaixa():
+def rejeitarCaixa(mensagem="Centro de Custo Bloqueado."):
     campo_mensagem = encontrarImagemLocalizada(r'Imagens\campoObservacaoRejeicao.png')
 
     while type(campo_mensagem) != tuple:
@@ -266,6 +268,7 @@ def rejeitarCaixa():
             press("enter")
             sleep(0.6)
             x, y = clicarDuasVezes(r'Imagens\statusNegrito.png')
+            sleep(0.8)
             repetir_clique = encontrarImagemLocalizada(r'Imagens\aindaNaoETempo.png')
             if type(repetir_clique) != tuple:
                 while type(repetir_clique) != tuple:
@@ -285,7 +288,6 @@ def rejeitarCaixa():
                         break
         moveTo(150,100)
 
-    mensagem = "Centro de Custo Bloqueado.",
     copy(mensagem)
     hotkey("ctrl", "v")
     press("tab")
@@ -355,8 +357,8 @@ def tratarEtapaFinal():
 
 
 def clicarBotaoSair():
-    botao_sair = encontrarImagem(r'Imagens\finalizarESair.png')
-    if type(botao_sair) == pyscreeze.Box:
+    botao_sair = encontrarImagemLocalizada(r'Imagens\finalizarESair.png')
+    if type(botao_sair) == tuple:
         press(["tab"]*6)
         sleep(0.3)
         press("enter")
