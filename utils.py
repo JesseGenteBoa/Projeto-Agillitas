@@ -192,7 +192,7 @@ def verificarStatus():
                     if type(status_xml5) == tuple:
                         controlador = 2
                     else:
-                        print("Abóbora Bliu Sunshine")
+                        raise FailSafeException
     return controlador
 
 
@@ -390,8 +390,6 @@ def clicarEmFinalizar():
 def tratarCasoXML():
     filtrarPorStatus()
     press("down")
-    print("Não tenho essa XML, meu nobre")
-    #enviar Email
 
 
 def passosParaRecomecar():
