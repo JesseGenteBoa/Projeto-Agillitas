@@ -139,7 +139,6 @@ def lancamentoIsolado(rt):
                 press("enter")
                 sleep(0.5)
                 utils.rejeitarCaixa()
-                print("Erro de CC")
                 raise FailSafeException
             
             repentina_etapa_final = utils.encontrarImagem(r'Imagens\etapaFinal.png')
@@ -235,7 +234,6 @@ def lancamentoIsolado(rt):
                     chave_de_acesso, processo_feito_errado = utils.copiarChaveDeAcesso()
                     numero_nf = chave_de_acesso[25:34]
                 utils.rejeitarCaixa(mensagem = f"NF {numero_nf} foi cancelada pelo fornecedor.")
-                print("NF cancelada")
                 raise FailSafeException
             
             
@@ -275,7 +273,6 @@ def lancamentoIsolado(rt):
                                 estado_do_caixa = utils.filtrarPorStatus()
                                 sleep(0.5)
                                 press("down")
-                                print("Já vi esse, paizão")
                                 controle_de_repeticao.append(chave_de_acesso)
                                 return operarLancamento(pular_processo)
                             
@@ -337,7 +334,6 @@ def lancamentoIsolado(rt):
 
             if processo_feito_errado == True:
                 controle_de_repeticao.append(chave_de_acesso)
-                print("Erro de Chave de Acesso")
                 if not rt_contador:
                     autor_da_rt, rt = utils.copiarRT(passos=4)
                     dono_da_rt.append(autor_da_rt)
@@ -372,7 +368,6 @@ def lancamentoIsolado(rt):
                     estado_do_caixa = utils.filtrarPorStatus()
                     sleep(0.5)
                     press("down")
-                    print("Já vi esse, paizão")
                     controle_de_repeticao.append(chave_de_acesso)
                     return operarLancamento(pular_processo)
                 
@@ -487,7 +482,6 @@ def lancamentoIsolado(rt):
                     estado_do_caixa = utils.filtrarPorStatus()
                     sleep(0.5)
                     press("down")
-                    print("Já vi esse, paizão")
                     controle_de_repeticao.append(chave_de_acesso)
                     return operarLancamento(pular_processo)
                 
@@ -604,8 +598,6 @@ def lancamentoIsolado(rt):
 
                 itens, indices_e_impostos = processador.trabalharDadosXML(valores_do_item)
 
-                print(nome_fantasia_forn, itens, indices_e_impostos)
-
 
                 tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
                 while type(tela_de_lancamento) != pyscreeze.Box:
@@ -644,7 +636,6 @@ def lancamentoIsolado(rt):
                         press("enter")
                         sleep(0.5)
                         utils.rejeitarCaixa()
-                        print("Erro de CC")
                         raise FailSafeException
 
                     tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
@@ -666,10 +657,8 @@ def lancamentoIsolado(rt):
                                 rt_contador.append(rt)
                         if type(erro_condicao_pag) == tuple:
                             cond_pag.append(rt_contador[0])
-                            print("Erro de condição de pagamento, meu patrãozinho")
                         elif type(prod_bloq) == tuple:
                             bloqueado.append(rt_contador[0])
-                            print("Problema de produto bloqueado, meu parceirinho")
                         estado_do_caixa = utils.filtrarPorStatus()
                         sleep(0.5)
                         press("down")
@@ -710,13 +699,10 @@ def lancamentoIsolado(rt):
                         press("down")
                         if type(erro_cnpj) == tuple:
                             cnpj_inconclusivo.append(rt_contador[0])
-                            print("Erro inconclusivo com o CNPJ")
                         elif type(erro_condicao_pag) == tuple:
                             cond_pag.append(rt_contador[0])
-                            print("Erro de condição de pagamento, meu patrãozinho")
                         else:
                             chave_sefaz.append(rt_contador[0])
-                            print("Problema com a chave de acesso, meu patrãozinho")
                         return operarLancamento(pular_processo)
 
 
@@ -735,7 +721,6 @@ def lancamentoIsolado(rt):
                         sleep(0.5)
                         press("down")
                         ncm_problematica.append(rt_contador[0])
-                        print("Problema na NCM, meu parceirinho")
                         return operarLancamento(pular_processo)
                     
                     tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
@@ -749,7 +734,6 @@ def lancamentoIsolado(rt):
 
                     verificador, item_fracionado = operadoresLancamento.verificarValorDoItem(itens, i)
                     if verificador == True:
-                        print("Que quantidade paia, meu parceiro")
                         exit()
                     tratamento_item = tratamentoItem.TratadorItem(item_fracionado, itens, i, ctrl_imposto)
                     item = tratamento_item.tratarItem()
