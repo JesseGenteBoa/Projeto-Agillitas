@@ -1,5 +1,6 @@
 from utils import formatador, formatador2, formatador3
 
+
 class ProcessadorXML:
     def __init__(self, doc):
         self.doc = doc
@@ -17,9 +18,15 @@ class ProcessadorXML:
                 nome_fantasia_forn = self.doc["enviNFe"]["NFe"]["infNFe"]["emit"]["xFant"]
             except KeyError:
                 try:
-                    nome_fantasia_forn = self.doc["nfeProc"]["NFe"]["infNFe"]["emit"]["xNome"]
+                    nome_fantasia_forn = self.doc["NFe"]["infNFe"]["emit"]["xFant"]
                 except KeyError:
-                    nome_fantasia_forn = self.doc["enviNFe"]["NFe"]["infNFe"]["emit"]["xNome"]
+                    try:
+                        nome_fantasia_forn = self.doc["nfeProc"]["NFe"]["infNFe"]["emit"]["xNome"]
+                    except KeyError:
+                        try:
+                            nome_fantasia_forn = self.doc["enviNFe"]["NFe"]["infNFe"]["emit"]["xNome"]
+                        except KeyError:
+                            nome_fantasia_forn = self.doc["NFe"]["infNFe"]["emit"]["xNome"]
 
 
         nome_fantasia_forn = nome_fantasia_forn[:20]
@@ -39,38 +46,6 @@ class ProcessadorXML:
         self.valores_do_item.append(valor_prod)
         self.valores_do_item.append(quantidade_comprada)
         self.valores_do_item.append(valor_unitario)
-
-        try:
-            valor_desconto_xml = coletor_xml["vDesc"]
-            valor_desconto_xml = formatador3(valor_desconto_xml)
-        except KeyError:
-            valor_desconto_xml = 0.00
-
-        self.valores_do_item.append(valor_desconto_xml)
-
-        try:
-            valor_frete_xml = coletor_xml["vFrete"]
-            valor_frete_xml = formatador3(valor_frete_xml)
-        except KeyError:
-            valor_frete_xml = 0.00
-
-        self.valores_do_item.append(valor_frete_xml)
-
-        try:
-            valor_seguro_xml = coletor_xml["vSeg"]
-            valor_seguro_xml = formatador3(valor_seguro_xml)
-        except KeyError:
-            valor_seguro_xml = 0.00
-
-        self.valores_do_item.append(valor_seguro_xml)
-
-        try:
-            valor_desp_xml = coletor_xml["vOutro"]
-            valor_desp_xml = formatador3(valor_desp_xml)
-        except KeyError:
-            valor_desp_xml = 0.00
-
-        self.valores_do_item.append(valor_desp_xml)
 
         try:
             busca_icms_xml = impostos_xml["ICMS"]
@@ -139,11 +114,11 @@ class ProcessadorXML:
                 tem_icms = False
                 tem_icms_st = False
                 tem_ipi = False
-                if valores_do_item[cont+7] != 0.00:
-                    cont+=8
+                if valores_do_item[cont+3] != 0.00:
+                    cont+=4
                     tem_icms = True
                 else:
-                    cont+=7
+                    cont+=3
                 if valores_do_item[cont+1] != 0.00:
                     cont+=3
                     tem_icms_st = True
@@ -173,8 +148,9 @@ class ProcessadorXML:
                 else:
                     ctrl_imposto = 0
                 self.indices_e_impostos.append(ctrl_imposto)
+
         except IndexError:
             pass
-
+        
         return self.itens, self.indices_e_impostos
 

@@ -1,11 +1,98 @@
-from pyautogui import locateOnScreen, locateCenterOnScreen, hotkey, press, position, write, FAILSAFE, FailSafeException
+from pyautogui import locateOnScreen, locateCenterOnScreen, hotkey, press, FAILSAFE
 from pydirectinput import click as mouseClique, moveTo, doubleClick                        
-from pyperclip import paste
 from time import sleep
+from email.message import EmailMessage
 import pyscreeze
+import smtplib
 
 
 FAILSAFE = True
+
+def enviarEmail(rt, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica):
+    mensagens = []
+    
+    if len(chave_sefaz) > 0:
+        mensagem_chave = f"{len(chave_sefaz)} processo(s) onde o sistema aponta que a chave de acesso não foi encontrada no SEFAZ."
+    else:
+        mensagem_chave = ""
+    mensagens.append(mensagem_chave)
+
+    if len(ncm_problematica) > 0:
+        mensagem_ncm = f"{len(ncm_problematica)} processo(s) onde o sistema aponta que a NCM está incorreta."
+    else:
+        mensagem_ncm = ""
+    mensagens.append(mensagem_ncm)
+
+    if len(sem_xml) > 0:
+        mensagem_xml_aus = f"{len(sem_xml)} processo(s) que não tenho o XML no meu repositório."
+    else:
+        mensagem_xml_aus = ""
+    mensagens.append(mensagem_xml_aus)
+
+    if len(cond_pag) > 0:
+        mensagem_cond_pag = f"{len(cond_pag)} processo(s) com erro na condição de pagamento."
+    else:
+        mensagem_cond_pag = ""
+    mensagens.append(mensagem_cond_pag)
+
+    if len(cnpj_inconclusivo) > 0:
+        mensagem_cnpj = f"{len(cnpj_inconclusivo)} processo(s) onde o sistema aponta um erro no CNPJ."
+    else:
+        mensagem_cnpj = ""
+    mensagens.append(mensagem_cnpj)
+
+    if len(chave_inconforme) > 0:
+        mensagem_ch_inc = f"{len(chave_inconforme)} processo(s) com uma chave de acesso impossível."
+    else:
+        mensagem_ch_inc = ""
+    mensagens.append(mensagem_ch_inc)
+
+    if len(nf_ja_lancada) > 0:
+        mensagem_xml = f"{len(nf_ja_lancada)} processo(s) já lançados segundo a rotina IntAgillitas"
+    else:
+        mensagem_xml = ""
+    mensagens.append(mensagem_xml)
+
+    if len(bloqueado) > 0:
+        mensagem_bloq = f"{len(bloqueado)} processo(s) com um item bloqueado."
+    else:
+        mensagem_bloq = ""
+    mensagens.append(mensagem_bloq)
+
+    mensagem = [str(elemento) for elemento in mensagens if elemento != ""]
+    string = "\n".join(mensagem)
+
+
+    corpo = f"""
+    Olá, colaborador!
+
+ 
+    Não consegui finalizar a {rt[0]} - {dono_da_rt[0]}                 
+
+    Causa:
+    {string}
+    
+
+    Pode me ajudar?
+    
+    Atenciosamente,
+    Mariquinha,
+    """
+    
+    carta = EmailMessage()
+    carta.set_content(corpo)
+    carta['Subject'] = "RT para verificar"
+    carta['From'] = "bot.contabil@eqseng.com.br"
+    carta['To'] = "jesse.silva@eqsengenharia.com.br, caixa@eqsengenharia.com.br"
+
+    try:
+        with smtplib.SMTP_SSL('mail.eqseng.com.br', 465) as servidor:
+            servidor.login("bot.contabil@eqseng.com.br", "EQSeng852@")
+            servidor.send_message(carta)
+    except Exception as e:
+        pass
+ 
+
 
 def encontrarImagem(imagem):
     cont = 0
@@ -37,172 +124,6 @@ def encontrarImagemLocalizada(imagem):
             pass
 
 
-def clicarMicrosiga(imagem=r'Imagens\microsiga.png'):
-    x, y = encontrarImagemLocalizada(imagem)
-    mouseClique(x, y)
-
-
-def filtrarPorStatus(imagem=r'Imagens\statusNegrito.png'):
-    try:
-        x, y = encontrarImagemLocalizada(imagem)
-    except TypeError:
-        x, y = encontrarImagemLocalizada(r'Imagens\status.png')
-    doubleClick(x, y)
-    sleep(1)
-    doubleClick(x, y)
-    sleep(1)
-    repetir_clique = encontrarImagemLocalizada(r'Imagens\aindaNaoETempo.png')
-    if type(repetir_clique) == tuple:
-        doubleClick(x, y)
-
-
-def solicitarXML():
-    solicitar_xml = encontrarImagemLocalizada(r'Imagens\solicitarXML.png')
-    x, y = solicitar_xml
-    doubleClick(x,y)
-    while True:
-        aguardando = encontrarImagemLocalizada(r'Imagens\solicitandoXML.png')
-        if type(aguardando) == tuple:
-            while type(aguardando) == tuple:
-                aguardando = encontrarImagemLocalizada(r'Imagens\solicitandoXML.png')
-        else:
-            clicar_novamente = encontrarImagemLocalizada(r'Imagens\XMLPendente.png')
-            if type(clicar_novamente) == tuple:
-                doubleClick(x,y)
-            else:
-                break
-    sleep(1)
-    
-
-def formatador(variavel, casas_decimais="{:.2f}"):
-    variavel = float(variavel)
-    variavel = casas_decimais.format(variavel)
-    variavel = variavel.replace(".", ",")
-    return variavel
-
-def formatador2(variavel):
-    variavel = float(variavel)
-    variavel = "{:.2f}".format(variavel)
-    return variavel
-
-def formatador3(variavel):
-    variavel = variavel.replace(",", ".")
-    variavel = float(variavel)
-    return variavel
-
-def formatador4(variavel):
-    variavel = variavel.replace(".", "")
-    variavel = formatador3(variavel)
-    return variavel
-
-
-def verificarStatus():
-    sleep(0.5)
-    status_xml1 = encontrarImagemLocalizada(r'Imagens\statusRecibo.png')
-    status_xml2 = encontrarImagemLocalizada(r'Imagens\XMLPendente.png')
-    status_xml3 = encontrarImagemLocalizada(r'Imagens\statusChaveDanfeNaoDisponivel.png')
-    status_xml4 = encontrarImagemLocalizada(r'Imagens\disponivelPLancamento.png')
-    if type(status_xml1) == tuple:
-        controlador = 1
-    elif type(status_xml2) == tuple:
-        controlador = 2
-    elif type(status_xml3) == tuple:
-        controlador = 3
-    elif type(status_xml4) == tuple:
-        controlador = 4
-    else:
-        print("Abóbora Bliu Sunshine")
-    return controlador
-
-
-def clicarEmLancar():
-    sleep(0.5)
-    botao_lancar = encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
-    x, y = botao_lancar
-    doubleClick(x,y)
-    doubleClick(x,y)
-    aguarde1 = encontrarImagem(r'Imagens\telaDeAguarde1.png')
-    aguarde2 = encontrarImagem(r'Imagens\telaDeAguarde2.png')
-    if type(aguarde1) == pyscreeze.Box or type(aguarde2) == pyscreeze.Box:
-        while True:
-            aguarde3 = encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
-            aguarde4 = encontrarImagemLocalizada(r'Imagens\telaDeAguarde2.png')
-            if type(aguarde3) != tuple and type(aguarde4) != tuple:
-                break
-    else:
-        aguarde1 = encontrarImagem(r'Imagens\telaDeAguarde1.png')
-        aguarde2 = encontrarImagem(r'Imagens\telaDeAguarde2.png')
-        if type(aguarde1) != pyscreeze.Box and type(aguarde2) != pyscreeze.Box:
-            doubleClick(x,y)
-    sleep(0.5)
-    caixa_finalizado = encontrarImagem(r'Imagens\jaLancado.png')
-    if type(caixa_finalizado) == pyscreeze.Box:
-        caixa_finalizado = True
-    else:
-        caixa_finalizado = False
-    return caixa_finalizado
-
-
-def tratarCCBloqueado():
-    estado_do_caixa = False
-    sleep(0.7)
-    hotkey("shift", "tab", interval=0.05)
-    press("down")
-    outro_recibo = verificarStatus()
-    if outro_recibo == 1:
-        sleep(0.5)
-        filtro_de_tipo = encontrarImagemLocalizada(r'Imagens\filtroTipo.png')
-        x, y = filtro_de_tipo
-        doubleClick(x,y)
-        sleep(1)
-        doubleClick(x,y)
-        outro_recibo = verificarStatus()
-        if outro_recibo == 1:
-            estado_do_caixa = True
-            return estado_do_caixa
-
-
-def copiarChaveDeAcesso():
-    processo_feito_errado = False
-    botao_chave_de_acesso = encontrarImagemLocalizada(r'Imagens\copiarChaveDeAcesso.png')
-    x, y = botao_chave_de_acesso
-    doubleClick(x, y)
-    sleep(1)
-    encontrar_chave_de_acesso = encontrarImagem(r'Imagens\abriuChaveDeAcesso.png')
-    caixa_finalizado = encontrarImagem(r'Imagens\jaLancado.png')
-    if type(caixa_finalizado) == pyscreeze.Box:
-        caixa_finalizado = True
-        chave_de_acesso = caixa_finalizado
-        return chave_de_acesso, processo_feito_errado
-    while type(encontrar_chave_de_acesso) != pyscreeze.Box:
-        encontrar_chave_de_acesso = encontrarImagem(r'Imagens\abriuChaveDeAcesso.png')
-        doubleClick(x, y)
-    sleep(0.5)
-    hotkey("ctrl", "c")
-    chave_de_acesso = paste()
-    chave_de_acesso = chave_de_acesso.replace(" ", "")
-    if len(chave_de_acesso) != 44:
-        processo_feito_errado = True
-    sleep(0.5)
-    press("esc")
-    sleep(2)
-    return chave_de_acesso, processo_feito_errado
-
-
-def copiarRT(passos=1):
-    sleep(0.5)
-    hotkey(["shift", "tab"]*passos)
-    sleep(0.5)
-    hotkey("ctrl", "c")
-    dono_da_rt = paste()
-    hotkey(["shift", "tab"]*2)
-    sleep(0.5)
-    hotkey("ctrl", "c")
-    rt = paste()
-    rt = rt.replace(" ", "")
-    return dono_da_rt, rt
-
-
 def aguardar():
     penultimo_aguarde = esperarAparecer(r'Imagens\telaDeAguarde1.png')
     sleep(0.6)
@@ -212,20 +133,55 @@ def aguardar():
     sleep(2)
 
 
-def tratarEtapaFinal():
-    press(["tab"]*3, interval=0.9)
-    press("enter")
-    sleep(1.5)
-    repentina_etapa_final = encontrarImagemLocalizada(r'Imagens\etapaFinal.png')
-    if type(repentina_etapa_final) == tuple:
+def aguardar1():
+    aguarde = encontrarImagem(r'Imagens\telaDeAguarde1.png')
+    while type(aguarde) == pyscreeze.Box:
+        aguarde = encontrarImagem(r'Imagens\telaDeAguarde1.png')
+
+
+def aguardar2():
+    aguarde1 = encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
+    aguarde2 = encontrarImagemLocalizada(r'Imagens\telaDeAguarde2.png')
+    return aguarde1, aguarde2
+
+
+def lancarRetroativo():
+    lancamento_retroativo = encontrarImagemLocalizada(r'Imagens\LancamentoRetroativo.png')
+    if type(lancamento_retroativo) == tuple:
+        sleep(0.5)
         press("enter")
-        sleep(1.5)
+        sleep(1)
+
+
+def repetirBotao():
+    repetir_acao = encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
+    while type(repetir_acao) == tuple:
+        press("enter")
+        repetir_acao = encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
+
+
+def tratarProcessosPendentes():
+    press("enter")
+    tabEEnter()
+    sleep(2)
+    repetirBotao()
+
+
+def tratarEtapaFinal():
+    x, y = clicarDuasVezes(r'Imagens\finalizarLancamento.png')
+    sleep(0.7)
+    while True:
+        moveTo(150,100)
+        quebrar_loop = encontrarImagemLocalizada(r'Imagens\quebrarloop.png')
+        if type(quebrar_loop) != tuple:
+            break
+        else:
+            doubleClick(x, y)
 
 
 def clicarBotaoSair():
-    botao_sair = encontrarImagem(r'Imagens\finalizarESair.png')
-    if type(botao_sair) == pyscreeze.Box:
-        print("Strogonoff")
+    botao_sair = encontrarImagemLocalizada(r'Imagens\finalizarESair.png')
+    if type(botao_sair) == tuple:
         press(["tab"]*6)
         sleep(0.3)
         press("enter")
@@ -254,14 +210,6 @@ def clicarEmFinalizar():
     return x, y
 
 
-def tratarCasoXML():
-    dono_da_rt, rt = copiarRT(passos=4)
-    filtrarPorStatus()
-    press("down")
-    print("Não tenho essa XML, meu nobre", rt, dono_da_rt)
-    #enviar Email
-
-
 def passosParaRecomecar():
     hotkey("shift", "tab", interval=0.05)
     press("enter")
@@ -274,3 +222,33 @@ def clicarDuasVezes(imagem):
     x, y = variavel
     doubleClick(x,y)
     return x, y
+
+
+def clicarMicrosiga(imagem=r'Imagens\microsiga.png'):
+    x, y = encontrarImagemLocalizada(imagem)
+    mouseClique(x, y)
+    
+
+def formatador(variavel, casas_decimais="{:.2f}"):
+    variavel = float(variavel)
+    variavel = casas_decimais.format(variavel)
+    variavel = variavel.replace(".", ",")
+    return variavel
+
+def formatador2(variavel):
+    variavel = float(variavel)
+    variavel = "{:.2f}".format(variavel)
+    return variavel
+
+def formatador3(variavel):
+    variavel = variavel.replace(",", ".")
+    variavel = float(variavel)
+    return variavel
+
+def formatador4(variavel):
+    variavel = variavel.replace(".", "")
+    variavel = formatador3(variavel)
+    return variavel
+
+
+

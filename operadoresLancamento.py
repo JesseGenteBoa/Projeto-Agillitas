@@ -5,6 +5,9 @@ import pyscreeze
 import utils
 
 
+FAILSAFE = True
+
+
 def escreverValorUnit(valor_unit):
     press("right")
     valor_unit = utils.formatador(valor_unit, casas_decimais="{:.6f}")
@@ -118,41 +121,6 @@ def definirTES(ctrl_imposto):
         press(["left"]*4)
 
 
-def inserirDesconto(desc_no_item):
-    press(["right"]*3)
-    sleep(0.5)
-    press("enter")
-    desc_no_item = utils.formatador2(desc_no_item)
-    write(desc_no_item, interval=0.02)
-    sleep(0.5)
-
-
-def inserirFrete(frete_no_item):
-    press(["right"]*105)
-    sleep(0.6)
-    press("enter")
-    frete_no_item = utils.formatador2(frete_no_item)
-    write(frete_no_item, interval=0.05)
-    sleep(0.6)
-
-
-def inserirSeguro(seg_no_item):
-    sleep(0.3)
-    press("enter")
-    seg_no_item = utils.formatador2(seg_no_item)
-    write(seg_no_item, interval=0.05)
-    sleep(0.6)
-
-
-def inserirDespesa(desp_no_item):
-    sleep(0.3)
-    press("enter")
-    desp_no_item = utils.formatador2(desp_no_item)
-    write(desp_no_item, interval=0.05)
-    sleep(0.6)
-    press(["left"]*112)
-
-
 def inserirICMS(icms_no_item, bc_icms, aliq_icms):
     press(["right"]*7)
     sleep(0.5)
@@ -171,12 +139,8 @@ def inserirICMS(icms_no_item, bc_icms, aliq_icms):
     write(icms_no_item)
 
 
-def inserirICMSST(icmsST_no_item, base_icms_ST, aliq_icms_ST, passosST=9):
+def inserirICMSST(icmsST_no_item, base_icms_ST, aliq_icms_ST, passosST=8):
     press(["right"]*passosST)
-    sleep(0.5)
-    press("enter")
-    write(aliq_icms_ST)
-    press(["left"]*2)
     sleep(0.5)
     press("enter")
     base_icms_ST = utils.formatador2(base_icms_ST)
@@ -222,3 +186,4 @@ def corrigirPassosHorizontal(cont, item):
         sleep(1)
         if cont == len(item):
             press(["left"]*4)
+
