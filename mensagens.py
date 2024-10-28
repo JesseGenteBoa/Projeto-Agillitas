@@ -26,7 +26,7 @@ Você também tem a opção de lançar apenas uma RT por vez, basta inserir o n�
 Para interromper ou finalizar a execução do bot, basta levar o cursor do mouse até o limite do canto superior esquerdo da sua tela e aguardar 10 segundos.
 Se a tela do bot estiver preta, mantenha o cursor no canto extremo do monitor e aguarde mais um pouco.
 
-Além disso, a Mariquinha também tem a funcionalidade de rejeitar Caixas! Basta clicar na boca dela e digitar a mensagem de rejeição desejada. Mas cuidado! Ela só rejeita o caixa se você já tiver deixado o mesmo aberto na rotina IntAgillitas. Então lembre-se, para utilizar essa funcionalidade é preciso já estar com o microsiga aberto no caixa que se deseja rejeitar.
+Além disso, a Mariquinha também tem a função de rejeitar Caixas! Basta clicar na boca dela e digitar a mensagem de rejeição desejada. Mas, cuidado! Ela só rejeita o caixa se você já tiver deixado o mesmo aberto na rotina IntAgillitas. Então lembre-se, para utilizar essa funcionalidade é preciso já estar com o microsiga aberto no caixa que se deseja rejeitar.
 """
 
         self.info4 = "Atenção!"
