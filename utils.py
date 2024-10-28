@@ -83,7 +83,7 @@ def enviarEmail(rt, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_p
     carta.set_content(corpo)
     carta['Subject'] = "RT para verificar"
     carta['From'] = "bot.contabil@eqseng.com.br"
-    carta['To'] = "jesse.silva@eqsengenharia.com.br, caixa@eqsengenharia.com.br"
+    carta['To'] = "caixa@eqsengenharia.com.br"
 
     try:
         with smtplib.SMTP_SSL('mail.eqseng.com.br', 465) as servidor:

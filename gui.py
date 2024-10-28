@@ -2,11 +2,11 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, Toplevel, Label
 from mariquinhaCorrente import robozinho
 from mariquinhaUnitaria import lancamentoIsolado
+from acaoComum import rejeitarCaixa
 from utils import clicarMicrosiga
 from time import sleep
 import mensagens
 import threading
-from acaoComum import rejeitarCaixa
 
 
 
@@ -39,10 +39,12 @@ def abrirNovaJanela():
 
     def aoClicar():
         mensagem = entrada.get()
-        rejeitarCaixa(mensagem, tipo="Independente")
-        nova_janela.destroy()
+        tipo="Independente"
+        if mensagem != "":
+            threading.Thread(target=rejeitarCaixa, args=(mensagem, tipo)).start()
+            nova_janela.destroy()
 
-    botao = Button(nova_janela, text="Executar", command=aoClicar)
+    botao = Button(nova_janela, text="Executar", command=aoClicar, cursor="hand2")
     botao.pack(padx=10, pady=10)
 
 

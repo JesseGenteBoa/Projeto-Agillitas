@@ -10,6 +10,8 @@ import pyscreeze
 import extratorXML
 
 
+FAILSAFE = True
+
 def procederPrimario():
     aguarde = utils.encontrarImagemLocalizada(r'Imagens\telaDeAguarde2.png')
     while type(aguarde) == tuple:
@@ -231,7 +233,7 @@ def rejeitarCaixa(mensagem="Centro de Custo Bloqueado.", tipo="Programado"):
             press("enter")
             sleep(0.6)
             x, y = utils.clicarDuasVezes(r'Imagens\status.png')
-            sleep(0.8)
+            sleep(1.5)
             repetir_clique = utils.encontrarImagemLocalizada(r'Imagens\aindaNaoETempo.png')
             if type(repetir_clique) != tuple:
                 while type(repetir_clique) != tuple:
@@ -248,6 +250,8 @@ def rejeitarCaixa(mensagem="Centro de Custo Bloqueado.", tipo="Programado"):
                     aguarde3, aguarde4 = utils.aguardar2()
                     if type(aguarde3) != tuple and type(aguarde4) != tuple:
                         break
+        else:
+            x, y = utils.clicarDuasVezes(r'Imagens\botaoRejeitarCaixa.png')
         moveTo(150,100)
 
     copy(mensagem)
