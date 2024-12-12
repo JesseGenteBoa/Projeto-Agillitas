@@ -90,6 +90,12 @@ def lancamentoIsolado(rt):
                 print("Erro de CC")
                 raise FailSafeException
             
+            recibo_corrigido = utils.encontrarImagemLocalizada(r'Imagens\reciboCorrigido.png')
+            if type(recibo_corrigido) == tuple:
+                hotkey(["shift", "tab"]*2, interval=0.5)
+                press("enter", interval=0.5)
+                sleep(3)
+            
             repentina_etapa_final = utils.encontrarImagem(r'Imagens\etapaFinal.png')
 
             if type(repentina_etapa_final) == pyscreeze.Box:
@@ -156,7 +162,7 @@ def lancamentoIsolado(rt):
             
 
         elif controlador == 2:
-            status_nf, falsa_duplicidade = acaoComum.solicitarXML()
+            status_nf, inserir_xml = acaoComum.solicitarXML()
 
             if type(status_nf) == tuple:
                 try:
@@ -169,17 +175,18 @@ def lancamentoIsolado(rt):
                 raise FailSafeException
             
             
-            if type(falsa_duplicidade) == tuple:
+            if type(inserir_xml) == tuple:
                 chave_de_acesso, processo_feito_errado = acaoComum.copiarChaveDeAcesso()
                 x, y = utils.clicarDuasVezes(r'Imagens\solicitarXML.png')
 
                 while True:
                     aguardando = utils.encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
                     falsa_duplicidade = utils.encontrarImagemLocalizada(r'Imagens\falsaDuplicidade.png')
+                    xml_manual = utils.encontrarImagemLocalizada(r'Imagens\inserirXML.png')
                     if type(aguardando) == tuple:
                         while type(aguardando) == tuple:
                             aguardando = utils.encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
-                    elif type(falsa_duplicidade) == tuple:
+                    elif type(falsa_duplicidade) == tuple or type(xml_manual) == tuple:
                         try:
                             verificador = pular_processo.index(chave_de_acesso)
                             try:

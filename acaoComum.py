@@ -32,17 +32,18 @@ def procederPrimario():
 
     while True:
         try:
-            clique_status = utils.encontrarImagemLocalizada(r'Imagens\status.png')  
+            clique_status = utils.encontrarImagemLocalizada(r'Imagens\statusPendente.png')  
             x, y = clique_status
             break
         except TypeError:
-            clique_status = utils.encontrarImagemLocalizada(r'Imagens\statusNegrito.png')  
+            clique_status = utils.encontrarImagemLocalizada(r'Imagens\status.png')  
             x, y = clique_status
             break
         except:
             pass
 
-    mouseClique(x, y)
+    for _ in range(5):
+        doubleClick(x, y, interval=0.07)
     sleep(1)
     press("enter", interval=1)
 
@@ -84,7 +85,8 @@ def solicitarXML():
     while True:
         nf_cancelada = utils.encontrarImagemLocalizada(r'Imagens\nfCancelada.png')
         falsa_duplicidade = utils.encontrarImagemLocalizada(r'Imagens\falsaDuplicidade.png')
-        if type(nf_cancelada) == tuple or type(falsa_duplicidade) == tuple:
+        xml_manual = utils.encontrarImagemLocalizada(r'Imagens\inserirXML.png')
+        if type(nf_cancelada) == tuple or type(falsa_duplicidade) == tuple or type(xml_manual) == tuple:
             press("right", interval=0.05)
             press("enter")
             sleep(0.5)
@@ -100,7 +102,13 @@ def solicitarXML():
             else:
                 break
     sleep(1)
-    return nf_cancelada, falsa_duplicidade
+    if type(falsa_duplicidade) == tuple:
+        inserir_xml = falsa_duplicidade
+    elif type(xml_manual) == tuple:
+        inserir_xml = xml_manual
+    else:
+        inserir_xml = None
+    return nf_cancelada, inserir_xml
 
 
 
@@ -220,27 +228,25 @@ def copiarChaveDeAcesso():
 def rejeitarCaixa(mensagem="Centro de Custo Bloqueado.", tipo="Programado"):
     if tipo == "Independente":
         utils.clicarMicrosiga()
+    abriu = utils.encontrarImagemLocalizada(r'Imagens\botaoRejeitarCaixa.png')
+    while type(abriu) != tuple:
+        utils.clicarMicrosiga()
+        abriu = utils.encontrarImagemLocalizada(r'Imagens\botaoRejeitarCaixa.png')
 
-    campo_mensagem = utils.encontrarImagemLocalizada(r'Imagens\campoObservacaoRejeicao.png')
-
-    while type(campo_mensagem) != tuple:
-        sleep(0.6)
-        x, y = utils.clicarDuasVezes(r'Imagens\botaoRejeitarCaixa.png')
-        sleep(0.7)
-        campo_mensagem = utils.encontrarImagemLocalizada(r'Imagens\campoObservacaoRejeicao.png')
-        bloqueio_da_rejeicao = utils.encontrarImagemLocalizada(r'Imagens\naoPodeRejeitar.png')
-        if type(bloqueio_da_rejeicao) == tuple:
-            press("enter")
-            sleep(0.6)
-            x, y = utils.clicarDuasVezes(r'Imagens\status.png')
-            sleep(1.5)
-            repetir_clique = utils.encontrarImagemLocalizada(r'Imagens\aindaNaoETempo.png')
-            if type(repetir_clique) != tuple:
-                while type(repetir_clique) != tuple:
-                    doubleClick(x, y)
-                    moveTo(150,100)
-                    repetir_clique = utils.encontrarImagemLocalizada(r'Imagens\aindaNaoETempo.png')
-            sleep(0.5)
+    sleep(0.5)
+    while True:
+        x, y = utils.clicarDuasVezes(r'Imagens\status.png')
+        sleep(1.5)
+        aux = 0
+        repetir_clique = utils.encontrarImagemLocalizada(r'Imagens\aindaNaoETempo.png')
+        if type(repetir_clique) != tuple:
+            while type(repetir_clique) != tuple and aux < 3:
+                doubleClick(x, y)
+                moveTo(150,100)
+                aux+=1
+                repetir_clique = utils.encontrarImagemLocalizada(r'Imagens\aindaNaoETempo.png')
+        sleep(0.5)
+        if aux != 3:
             x, y = utils.clicarDuasVezes(r'Imagens\botaoCancelar.png')
             tela_de_lancamento = utils.esperarAparecer(r'Imagens\documentoEntrada.png')
             hotkey("ctrl", "s", interval=0.5)
@@ -251,8 +257,18 @@ def rejeitarCaixa(mensagem="Centro de Custo Bloqueado.", tipo="Programado"):
                     if type(aguarde3) != tuple and type(aguarde4) != tuple:
                         break
         else:
-            x, y = utils.clicarDuasVezes(r'Imagens\botaoRejeitarCaixa.png')
-        moveTo(150,100)
+            break
+    x, y = abriu
+    doubleClick(x,y)
+    campo_mensagem = utils.encontrarImagemLocalizada(r'Imagens\campoObservacaoRejeicao.png')
+
+    while type(campo_mensagem) != tuple:
+        sleep(0.6)
+        x, y = utils.clicarDuasVezes(r'Imagens\botaoRejeitarCaixa.png')
+        sleep(0.7)
+        campo_mensagem = utils.encontrarImagemLocalizada(r'Imagens\campoObservacaoRejeicao.png')
+
+    moveTo(150,100)
 
     copy(mensagem)
     hotkey("ctrl", "v")
@@ -265,7 +281,7 @@ def rejeitarCaixa(mensagem="Centro de Custo Bloqueado.", tipo="Programado"):
         aux_cont+=1
         if aux_cont == 0:
             break
-
+    sleep(2)
 
 
 def copiarRT(passos=1):
@@ -466,7 +482,7 @@ def inserirValoresDaNFnoSistema(indices_e_impostos, itens):
             press("down")
         if i+1 == len(indices_e_impostos):
             press("up")
-        sleep(1.5)
+        sleep(2)
 
 
 

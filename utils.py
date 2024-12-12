@@ -83,11 +83,11 @@ def enviarEmail(rt, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_p
     carta.set_content(corpo)
     carta['Subject'] = "RT para verificar"
     carta['From'] = "bot.contabil@eqseng.com.br"
-    carta['To'] = "caixa@eqsengenharia.com.br"
+    carta['To'] = ["caixa@eqsengenharia.com.br", "jesse.silva@eqsengenharia.com.br"]
 
     try:
-        with smtplib.SMTP_SSL('mail.eqseng.com.br', 465) as servidor:
-            servidor.login("bot.contabil@eqseng.com.br", "EQSeng852@")
+        with smtplib.SMTP_SSL('grid331.mailgrid.com.br', 465) as servidor:
+            servidor.login("eqsengenharia@eqsengenharia.com.br", "YXPLlbnL2N")
             servidor.send_message(carta)
     except Exception as e:
         pass
@@ -225,8 +225,12 @@ def clicarDuasVezes(imagem):
 
 
 def clicarMicrosiga(imagem=r'Imagens\microsiga.png'):
-    x, y = encontrarImagemLocalizada(imagem)
-    mouseClique(x, y)
+    try:
+        x, y = encontrarImagemLocalizada(imagem)
+        mouseClique(x, y)
+    except:
+        x, y = encontrarImagemLocalizada(r'Imagens\microsigaWin11.png')
+        mouseClique(x, y)
     
 
 def formatador(variavel, casas_decimais="{:.2f}"):
@@ -235,20 +239,21 @@ def formatador(variavel, casas_decimais="{:.2f}"):
     variavel = variavel.replace(".", ",")
     return variavel
 
+
 def formatador2(variavel):
     variavel = float(variavel)
     variavel = "{:.2f}".format(variavel)
     return variavel
+
 
 def formatador3(variavel):
     variavel = variavel.replace(",", ".")
     variavel = float(variavel)
     return variavel
 
+
 def formatador4(variavel):
     variavel = variavel.replace(".", "")
     variavel = formatador3(variavel)
     return variavel
-
-
 

@@ -137,7 +137,7 @@ def robozinho():
             
 
         elif controlador == 2:
-            status_nf, falsa_duplicidade = acaoComum.solicitarXML()
+            status_nf, inserir_xml = acaoComum.solicitarXML()
 
             if type(status_nf) == tuple:
                 try:
@@ -149,17 +149,18 @@ def robozinho():
                 print("NF cancelada")
                 return robozinho()
             
-            if type(falsa_duplicidade) == tuple:
+            if type(inserir_xml) == tuple:
                 chave_de_acesso, processo_feito_errado = acaoComum.copiarChaveDeAcesso()
                 x, y = utils.clicarDuasVezes(r'Imagens\solicitarXML.png')
 
                 while True:
                     aguardando = utils.encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
                     falsa_duplicidade = utils.encontrarImagemLocalizada(r'Imagens\falsaDuplicidade.png')
+                    xml_manual = utils.encontrarImagemLocalizada(r'Imagens\inserirXML.png')
                     if type(aguardando) == tuple:
                         while type(aguardando) == tuple:
                             aguardando = utils.encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
-                    elif type(falsa_duplicidade) == tuple:
+                    elif type(falsa_duplicidade) == tuple or type(xml_manual) == tuple:
                         try:
                             verificador = pular_processo.index(chave_de_acesso)
                             try:
