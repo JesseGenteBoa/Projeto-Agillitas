@@ -63,18 +63,10 @@ def insistirEmEncontrar(finalizar, ainda_tem_processo_pendente, x, y):
     return finalizar, ainda_tem_processo_pendente
 
 
-
 def pularProcesso():
-    variavel = filtrarPorStatus()
+    _ = filtrarPorStatus()
     sleep(0.5)
     press("down", interval=0.7)
-
-
-
-def tratarCasoXML():
-    filtrarPorStatus()
-    press("down")
-
 
 
 def solicitarXML():

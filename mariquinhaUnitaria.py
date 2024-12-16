@@ -224,7 +224,7 @@ def lancamentoIsolado(rt):
                                     autor_da_rt, rt = acaoComum.copiarRT(passos=2)
                                     dono_da_rt.append(autor_da_rt)
                                     rt_contador.append(rt)
-                                acaoComum.tratarCasoXML()
+                                acaoComum.pularProcesso()
                                 sem_xml.append(rt_contador[0])
                                 return operarLancamento(pular_processo)
               
@@ -247,7 +247,7 @@ def lancamentoIsolado(rt):
                                 autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                                 dono_da_rt.append(autor_da_rt)
                                 rt_contador.append(rt)
-                            acaoComum.tratarCasoXML()
+                            acaoComum.pularProcesso()
                             sem_xml.append(rt_contador[0])
                             return operarLancamento(pular_processo)
                         estado_do_caixa = acaoComum.filtrarPorStatus()
@@ -314,7 +314,7 @@ def lancamentoIsolado(rt):
                         autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
-                    acaoComum.tratarCasoXML()
+                    acaoComum.pularProcesso()
                     sem_xml.append(rt_contador[0])
                     return operarLancamento(pular_processo)
                 
@@ -345,7 +345,7 @@ def lancamentoIsolado(rt):
                         autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
-                    acaoComum.tratarCasoXML()
+                    acaoComum.pularProcesso()
                     sem_xml.append(rt_contador[0])
                     return operarLancamento(pular_processo)
                 
@@ -406,7 +406,7 @@ def lancamentoIsolado(rt):
                         autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
-                    acaoComum.tratarCasoXML()
+                    acaoComum.pularProcesso()
                     sem_xml.append(rt_contador[0])
                     return operarLancamento(pular_processo)
            

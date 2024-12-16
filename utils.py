@@ -64,19 +64,19 @@ def enviarEmail(rt, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_p
 
 
     corpo = f"""
-    Olá, colaborador!
+Olá, colaborador!
 
- 
-    Não consegui finalizar a {rt[0]} - {dono_da_rt[0]}                 
 
-    Causa:
-    {string}
-    
+Não consegui finalizar a {rt[0]} - {dono_da_rt[0]}                 
 
-    Pode me ajudar?
-    
-    Atenciosamente,
-    Mariquinha,
+Causa:
+{string}
+
+
+Pode me ajudar?
+
+Atenciosamente,
+Mariquinha,
     """
     
     carta = EmailMessage()
