@@ -196,7 +196,7 @@ def robozinho():
                                 pular_processo.append(chave_de_acesso)
                                 controle_de_repeticao.append(chave_de_acesso)
                                 if not rt_contador:
-                                    autor_da_rt, rt = acaoComum.copiarRT(passos=2)
+                                    autor_da_rt, rt = acaoComum.copiarRT(passos=3)
                                     dono_da_rt.append(autor_da_rt)
                                     rt_contador.append(rt)
                                 acaoComum.pularProcesso()
@@ -219,7 +219,7 @@ def robozinho():
                             pular_processo.append(chave_de_acesso)
                             controle_de_repeticao.append(chave_de_acesso)
                             if not rt_contador:
-                                autor_da_rt, rt = acaoComum.copiarRT(passos=4)
+                                autor_da_rt, rt = acaoComum.copiarRT(passos=5)
                                 dono_da_rt.append(autor_da_rt)
                                 rt_contador.append(rt)
                             acaoComum.pularProcesso()
@@ -249,7 +249,7 @@ def robozinho():
                     controle_de_repeticao.append(chave_de_acesso)
                     print("Erro de Chave de Acesso")
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
+                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     try:
@@ -291,7 +291,7 @@ def robozinho():
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
+                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     acaoComum.pularProcesso()
@@ -322,7 +322,7 @@ def robozinho():
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
+                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     acaoComum.pularProcesso()
@@ -387,7 +387,7 @@ def robozinho():
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
+                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     acaoComum.pularProcesso()

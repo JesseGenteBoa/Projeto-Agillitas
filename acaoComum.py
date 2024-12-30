@@ -142,9 +142,9 @@ def filtrarPorStatus(imagem=r'Imagens\status.png'):
     except TypeError:
         x, y = utils.encontrarImagemLocalizada(r'Imagens\statusNegrito.png')
     doubleClick(x, y)
-    sleep(1)
+    sleep(1.5)
     doubleClick(x, y)
-    sleep(1)
+    sleep(1.5)
     caixa_finalizado = utils.encontrarImagemLocalizada(r'Imagens\aindaNaoETempo.png')
     if type(caixa_finalizado) == tuple:
         doubleClick(x, y)
@@ -276,7 +276,7 @@ def rejeitarCaixa(mensagem="Centro de Custo Bloqueado.", tipo="Programado"):
     sleep(2)
 
 
-def copiarRT(passos=1):
+def copiarRT(passos=2):
     sleep(1)
     hotkey(["shift", "tab"]*passos)
     hotkey("ctrl", "c", interval=1)
