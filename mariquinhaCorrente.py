@@ -82,7 +82,7 @@ def robozinho():
                 press("tab", interval=0.3)
                 press("enter", interval=0.5)
                 if not rt_contador:
-                    autor_da_rt, rt = acaoComum.copiarRT()
+                    autor_da_rt, rt = acaoComum.copiarRT(passos=1)
                     dono_da_rt.append(autor_da_rt)
                     rt_contador.append(rt)
                 nf_ja_lancada.append(rt_contador[0])
@@ -169,7 +169,7 @@ def robozinho():
                                 sleep(1)
                                 press("enter", interval=1)
                                 utils.repetirBotao()
-                                clique_status = utils.esperarAparecer(r'Imagens\statusNegrito.png')  
+                                clique_status = utils.esperarAparecer(r'Imagens\status.png')  
                                 x, y = clique_status
                                 mouseClique(x, y)
                                 sleep(0.7)
@@ -196,7 +196,7 @@ def robozinho():
                                 pular_processo.append(chave_de_acesso)
                                 controle_de_repeticao.append(chave_de_acesso)
                                 if not rt_contador:
-                                    autor_da_rt, rt = acaoComum.copiarRT(passos=3)
+                                    autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                                     dono_da_rt.append(autor_da_rt)
                                     rt_contador.append(rt)
                                 acaoComum.pularProcesso()
@@ -219,7 +219,7 @@ def robozinho():
                             pular_processo.append(chave_de_acesso)
                             controle_de_repeticao.append(chave_de_acesso)
                             if not rt_contador:
-                                autor_da_rt, rt = acaoComum.copiarRT(passos=5)
+                                autor_da_rt, rt = acaoComum.copiarRT()
                                 dono_da_rt.append(autor_da_rt)
                                 rt_contador.append(rt)
                             acaoComum.pularProcesso()
@@ -249,7 +249,7 @@ def robozinho():
                     controle_de_repeticao.append(chave_de_acesso)
                     print("Erro de Chave de Acesso")
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
+                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     try:
@@ -291,7 +291,7 @@ def robozinho():
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
+                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     acaoComum.pularProcesso()
@@ -322,7 +322,7 @@ def robozinho():
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
+                        autor_da_rt, rt = acaoComum.copiarRT()
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     acaoComum.pularProcesso()
@@ -364,7 +364,7 @@ def robozinho():
                     sleep(2)
                     press("enter", interval=1)
                     utils.repetirBotao()
-                    clique_status = utils.esperarAparecer(r'Imagens\statusNegrito.png')  
+                    clique_status = utils.esperarAparecer(r'Imagens\status.png')  
                     x, y = clique_status
                     mouseClique(x, y)
                     sleep(0.7)
@@ -387,7 +387,7 @@ def robozinho():
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
+                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     acaoComum.pularProcesso()
@@ -401,7 +401,7 @@ def robozinho():
                 press("tab", interval=0.3)
                 press("enter", interval=0.5)
                 if not rt_contador:
-                    autor_da_rt, rt = acaoComum.copiarRT()
+                    autor_da_rt, rt = acaoComum.copiarRT(passos=1)
                     dono_da_rt.append(autor_da_rt)
                     rt_contador.append(rt)
                 nf_ja_lancada.append(rt_contador[0])
@@ -461,7 +461,7 @@ def robozinho():
                         if type(prod_bloq) == tuple or type(erro_condicao_pag) == tuple:
                             press("enter", interval=0.5)
                             if not rt_contador:
-                                autor_da_rt, rt = acaoComum.copiarRT()
+                                autor_da_rt, rt = acaoComum.copiarRT(passos=1)
                                 dono_da_rt.append(autor_da_rt)
                                 rt_contador.append(rt)
                         if type(erro_condicao_pag) == tuple:
@@ -495,7 +495,7 @@ def robozinho():
                         if type(erro_generico) == tuple:
                             press("enter", interval=0.5)
                         if not rt_contador:
-                            autor_da_rt, rt = acaoComum.copiarRT()
+                            autor_da_rt, rt = acaoComum.copiarRT(passos=1)
                             dono_da_rt.append(autor_da_rt)
                             rt_contador.append(rt)
                         acaoComum.pularProcesso()
@@ -517,7 +517,7 @@ def robozinho():
                         controle_de_repeticao.append(chave_de_acesso)
                         press("esc", interval=0.7)
                         if not rt_contador:
-                            autor_da_rt, rt = acaoComum.copiarRT()
+                            autor_da_rt, rt = acaoComum.copiarRT(passos=1)
                             dono_da_rt.append(autor_da_rt)
                             rt_contador.append(rt)
                         acaoComum.pularProcesso()

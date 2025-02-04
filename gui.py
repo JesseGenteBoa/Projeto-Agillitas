@@ -68,15 +68,11 @@ def abrirGui():
     def lancarRTIndividual():
         rt = entry_1.get()
         rt = rt.upper()
-        if len(rt) == 8:
-            rt = rt[-5:]
-        if len(rt) == 5:
-            if rt.isdigit():
-                rt = "RT-" + rt
-                sleep(0.5)
-                window.iconify()
-                sleep(1)
-                threading.Thread(target=lancamentoIsolado, args=(rt,)).start()
+        if 'RT-' in rt:
+            sleep(0.5)
+            window.iconify()
+            sleep(1)
+            threading.Thread(target=lancamentoIsolado, args=(rt,)).start()
 
 
     window = Tk()

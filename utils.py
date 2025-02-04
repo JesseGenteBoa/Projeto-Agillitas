@@ -125,7 +125,7 @@ def encontrarImagemLocalizada(imagem):
 
 
 def aguardar():
-    penultimo_aguarde = esperarAparecer(r'Imagens\telaDeAguarde1.png')
+    _ = esperarAparecer(r'Imagens\telaDeAguarde1.png')
     sleep(0.6)
     aguarde_final = encontrarImagemLocalizada(r'Imagens\ultimoAguarde.png')
     while type(aguarde_final) == tuple:

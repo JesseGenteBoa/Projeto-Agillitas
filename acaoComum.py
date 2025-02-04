@@ -279,10 +279,10 @@ def rejeitarCaixa(mensagem="Centro de Custo Bloqueado.", tipo="Programado"):
 def copiarRT(passos=2):
     sleep(1)
     hotkey(["shift", "tab"]*passos)
-    hotkey("ctrl", "c", interval=1)
+    hotkey("ctrl", "c", interval=2)
     dono_da_rt = paste()
     hotkey(["shift", "tab"]*2)
-    hotkey("ctrl", "c", interval=1)
+    hotkey("ctrl", "c", interval=2)
     rt = paste()
     rt = rt.replace(" ", "")
     return dono_da_rt, rt
@@ -486,8 +486,9 @@ def finalizarLancamento():
         press("enter")
         campo_sped = utils.encontrarImagemLocalizada(r'Imagens\campoSPED.png')
         x, y = campo_sped
+        sleep(1)
         doubleClick(x,y)
-        sleep(0.4)
+        sleep(1)
         write("NF", interval=0.3)
         press("tab")
         hotkey("ctrl", "s", interval=1)

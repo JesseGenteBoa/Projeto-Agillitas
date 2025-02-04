@@ -107,7 +107,7 @@ def lancamentoIsolado(rt):
                 press("tab", interval=0.3)
                 press("enter", interval=0.5)
                 if not rt_contador:
-                    autor_da_rt, rt = acaoComum.copiarRT()
+                    autor_da_rt, rt = acaoComum.copiarRT(passos=1)
                     dono_da_rt.append(autor_da_rt)
                     rt_contador.append(rt)
                 nf_ja_lancada.append(rt_contador[0])
@@ -195,11 +195,6 @@ def lancamentoIsolado(rt):
                                 sleep(1)
                                 press("enter", interval=1)
                                 utils.repetirBotao()
-                                clique_status = utils.esperarAparecer(r'Imagens\statusNegrito.png')  
-                                x, y = clique_status
-                                mouseClique(x, y)
-                                sleep(0.7)
-                                press("down")
                                 if rt_contador:
                                     utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                                 raise FailSafeException
@@ -221,7 +216,7 @@ def lancamentoIsolado(rt):
                                 pular_processo.append(chave_de_acesso)
                                 controle_de_repeticao.append(chave_de_acesso)
                                 if not rt_contador:
-                                    autor_da_rt, rt = acaoComum.copiarRT(passos=3)
+                                    autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                                     dono_da_rt.append(autor_da_rt)
                                     rt_contador.append(rt)
                                 acaoComum.pularProcesso()
@@ -244,7 +239,7 @@ def lancamentoIsolado(rt):
                             pular_processo.append(chave_de_acesso)
                             controle_de_repeticao.append(chave_de_acesso)
                             if not rt_contador:
-                                autor_da_rt, rt = acaoComum.copiarRT(passos=5)
+                                autor_da_rt, rt = acaoComum.copiarRT()
                                 dono_da_rt.append(autor_da_rt)
                                 rt_contador.append(rt)
                             acaoComum.pularProcesso()
@@ -274,7 +269,7 @@ def lancamentoIsolado(rt):
                     controle_de_repeticao.append(chave_de_acesso)
                     print("Erro de Chave de Acesso")
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
+                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     try:
@@ -311,7 +306,7 @@ def lancamentoIsolado(rt):
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
+                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     acaoComum.pularProcesso()
@@ -342,7 +337,7 @@ def lancamentoIsolado(rt):
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
+                        autor_da_rt, rt = acaoComum.copiarRT()
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     acaoComum.pularProcesso()
@@ -403,7 +398,7 @@ def lancamentoIsolado(rt):
                     controle_de_repeticao.append(chave_de_acesso)
                     pular_processo.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=5)
+                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     acaoComum.pularProcesso()
@@ -419,7 +414,7 @@ def lancamentoIsolado(rt):
                 press("tab", interval=0.3)
                 press("enter", interval=0.5)
                 if not rt_contador:
-                    autor_da_rt, rt = acaoComum.copiarRT()
+                    autor_da_rt, rt = acaoComum.copiarRT(passos=1)
                     dono_da_rt.append(autor_da_rt)
                     rt_contador.append(rt)
                 nf_ja_lancada.append(rt_contador[0])
@@ -481,7 +476,7 @@ def lancamentoIsolado(rt):
                             press("enter")
                             sleep(0.5)
                             if not rt_contador:
-                                autor_da_rt, rt = acaoComum.copiarRT()
+                                autor_da_rt, rt = acaoComum.copiarRT(passos=1)
                                 dono_da_rt.append(autor_da_rt)
                                 rt_contador.append(rt)
                         if type(erro_condicao_pag) == tuple:
@@ -515,7 +510,7 @@ def lancamentoIsolado(rt):
                         if type(erro_generico) == tuple:
                             press("enter", interval=0.5)
                         if not rt_contador:
-                            autor_da_rt, rt = acaoComum.copiarRT()
+                            autor_da_rt, rt = acaoComum.copiarRT(passos=1)
                             dono_da_rt.append(autor_da_rt)
                             rt_contador.append(rt)
                         acaoComum.pularProcesso()
@@ -538,7 +533,7 @@ def lancamentoIsolado(rt):
                         controle_de_repeticao.append(chave_de_acesso)
                         press("esc", interval=0.7)
                         if not rt_contador:
-                            autor_da_rt, rt = acaoComum.copiarRT()
+                            autor_da_rt, rt = acaoComum.copiarRT(passos=1)
                             dono_da_rt.append(autor_da_rt)
                             rt_contador.append(rt)
                         acaoComum.pularProcesso()
