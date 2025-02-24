@@ -456,13 +456,6 @@ def lancamentoIsolado(rt):
                     tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
                     utils.lancarRetroativo()
 
-                    cc_bloqueado = utils.encontrarImagem(r'Imagens\ccBloqueado.png')
-                    if type(cc_bloqueado) == pyscreeze.Box:
-                        press("enter", interval=0.5)
-                        acaoComum.rejeitarCaixa()
-                        print("Erro de CC")
-                        raise FailSafeException
-
                     tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
                     tela_bloqueio = utils.encontrarImagem(r'Imagens\algumBloqueio.png')
                     if type(tela_bloqueio) == pyscreeze.Box:
@@ -470,6 +463,12 @@ def lancamentoIsolado(rt):
                         controle_de_repeticao.append(chave_de_acesso)
                         press("enter", interval=1)
                         utils.aguardar1()
+                        cc_bloqueado = utils.encontrarImagem(r'Imagens\ccBloqueado.png')
+                        if type(cc_bloqueado) == pyscreeze.Box:
+                            press("enter", interval=0.5)
+                            acaoComum.rejeitarCaixa()
+                            print("Erro de CC")
+                            raise FailSafeException
                         prod_bloq = utils.encontrarImagemLocalizada(r'Imagens\produtoBloqueado.png')
                         erro_condicao_pag = utils.encontrarImagemLocalizada(r'Imagens\erroCondicaoDePagamento.png')
                         if type(prod_bloq) == tuple or type(erro_condicao_pag) == tuple:
