@@ -1,4 +1,4 @@
-from gui import abrirGui
+from gui import abrir_gui
 
 if __name__ == "__main__":
-    abrirGui()
+    abrir_gui()

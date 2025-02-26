@@ -35,9 +35,9 @@ Além disso, a Mariquinha também tem a função de rejeitar Caixas! Basta clica
 Nosso servidor está sempre sobrecarregado, o que pode gerar instabilidade no bot durante sua execução, fazendo-o "crachar" e não conseguir lançar mais nenhum processo. Se acaso perceber algum desses momentos de instabilidade do servidor, verifique se o bot continua execultando seus lançamentos ou se está travado em alguma tela. Se estiver travado, realize o procedimento de interrupção, depois inicialize o bot novamente."""
 
 
-    def mostrarInfo(self, info, texto):
+    def mostrar_info(self, info, texto):
         messagebox.showinfo(info, texto)
 
-    def mostrarAviso(self, info, texto):
+    def mostrar_aviso(self, info, texto):
         messagebox.showwarning(info, texto)
 

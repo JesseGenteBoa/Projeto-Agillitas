@@ -9,7 +9,7 @@ class TratadorItem:
         self.item = []
  
  
-    def tratarItem(self):
+    def tratar_item(self):
         if self.ctrl_imposto == 0:
            pass
 

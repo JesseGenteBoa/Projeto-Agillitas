@@ -1,9 +1,9 @@
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Button, PhotoImage, Toplevel, Label
 from mariquinhaCorrente import robozinho
-from mariquinhaUnitaria import lancamentoIsolado
-from acaoComum import rejeitarCaixa
-from utils import clicarMicrosiga
+from mariquinhaUnitaria import lancamento_isolado
+from acaoComum import rejeitar_caixa
+from utils import clicar_microsiga
 from time import sleep
 import mensagens
 import threading
@@ -18,7 +18,7 @@ def relative_to_assets(path: str) -> Path:
         return ASSETS_PATH / Path(path)
 
 
-def abrirNovaJanela():
+def abrir_nova_janela():
     nova_janela = Toplevel()
     nova_janela.title("Rejeitar Caixa")
 
@@ -37,56 +37,56 @@ def abrirNovaJanela():
     entrada = Entry(nova_janela)
     entrada.pack(padx=10, pady=10)
 
-    def aoClicar():
+    def ao_clicar():
         mensagem = entrada.get()
         tipo="Independente"
         if mensagem != "":
-            threading.Thread(target=rejeitarCaixa, args=(mensagem, tipo)).start()
+            threading.Thread(target=rejeitar_caixa, args=(mensagem, tipo)).start()
             nova_janela.destroy()
 
-    botao = Button(nova_janela, text="Executar", command=aoClicar, cursor="hand2")
+    botao = Button(nova_janela, text="Executar", command=ao_clicar, cursor="hand2")
     botao.pack(padx=10, pady=10)
 
 
-def abrirGui():
+def abrir_gui():
 
-    def validarEntrada(P):
+    def validar_entrada(P):
         P = P.strip()
         if len(P) > 8:
             return False
         return True
         
 
-    def soltarAMariquinha():
+    def soltar_mariquinha():
         sleep(0.5)
         window.iconify()
         sleep(1)
-        clicarMicrosiga()
+        clicar_microsiga()
         threading.Thread(target=robozinho).start()
 
 
-    def lancarRTIndividual():
+    def lancar_RT_individual():
         rt = entry_1.get()
         rt = rt.upper()
         if 'RT-' in rt:
             sleep(0.5)
             window.iconify()
             sleep(1)
-            threading.Thread(target=lancamentoIsolado, args=(rt,)).start()
+            threading.Thread(target=lancamento_isolado, args=(rt,)).start()
 
 
     window = Tk()
 
     bot = mensagens.Mensagens(window)
 
-    bot.mostrarInfo(bot.info, bot.texto)
-    bot.mostrarInfo(bot.info2, bot.texto2)
-    bot.mostrarInfo(bot.info3, bot.texto3)
-    bot.mostrarAviso(bot.info4, bot.texto4)
+    bot.mostrar_info(bot.info, bot.texto)
+    bot.mostrar_info(bot.info2, bot.texto2)
+    bot.mostrar_info(bot.info3, bot.texto3)
+    bot.mostrar_aviso(bot.info4, bot.texto4)
 
     window.deiconify()
 
-    vcmd = (window.register(validarEntrada), '%P')
+    vcmd = (window.register(validar_entrada), '%P')
 
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
@@ -125,7 +125,7 @@ def abrirGui():
         borderwidth=0,
         cursor="hand2",
         highlightthickness=0,
-        command=lambda: soltarAMariquinha(),
+        command=lambda: soltar_mariquinha(),
         relief="flat",
         background="#FF8D8D",
         bd=0.5,
@@ -201,7 +201,7 @@ def abrirGui():
         borderwidth=0,
         cursor="hand2",
         highlightthickness=0,
-        command=lambda: lancarRTIndividual(),
+        command=lambda: lancar_RT_individual(),
         relief="flat"
     )
     button_2.place(
@@ -218,7 +218,7 @@ def abrirGui():
         borderwidth=0,
         cursor="hand2",
         highlightthickness=0,
-        command=lambda: abrirNovaJanela(),
+        command=lambda: abrir_nova_janela(),
         relief="flat"
     )
     button_3.place(

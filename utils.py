@@ -1,5 +1,4 @@
-from pyautogui import locateOnScreen, locateCenterOnScreen, hotkey, press, FAILSAFE
-from pydirectinput import click as mouseClique, moveTo, doubleClick                        
+import pyautogui as ptg
 from time import sleep
 from email.message import EmailMessage
 import pyscreeze
@@ -8,7 +7,7 @@ import smtplib
 
 FAILSAFE = True
 
-def enviarEmail(rt, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica):
+def enviar_email(rt, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica):
     mensagens = []
     
     if len(chave_sefaz) > 0:
@@ -94,11 +93,11 @@ Mariquinha,
  
 
 
-def encontrarImagem(imagem):
+def encontrar_imagem(imagem):
     cont = 0
     while True:
         try:
-            encontrou = locateOnScreen(imagem, grayscale=True, confidence = 0.85)
+            encontrou = ptg.locateOnScreen(imagem, grayscale=True, confidence = 0.85)
             return encontrou
         except:
             sleep(0.8)
@@ -109,11 +108,11 @@ def encontrarImagem(imagem):
             pass
             
 
-def encontrarImagemLocalizada(imagem):
+def encontrar_centro_imagem(imagem):
     cont = 0
     while True:
         try:
-            x, y = locateCenterOnScreen(imagem, grayscale=True, confidence=0.92)     
+            x, y = ptg.locateCenterOnScreen(imagem, grayscale=True, confidence=0.92)     
             return (x, y)
         except:
             sleep(0.8)
@@ -125,112 +124,100 @@ def encontrarImagemLocalizada(imagem):
 
 
 def aguardar():
-    _ = esperarAparecer(r'Imagens\telaDeAguarde1.png')
+    _ = esperar_aparecer(r'Imagens\telaDeAguarde1.png')
     sleep(0.6)
-    aguarde_final = encontrarImagemLocalizada(r'Imagens\ultimoAguarde.png')
+    aguarde_final = encontrar_centro_imagem(r'Imagens\ultimoAguarde.png')
     while type(aguarde_final) == tuple:
-        aguarde_final = encontrarImagemLocalizada(r'Imagens\ultimoAguarde.png')
+        aguarde_final = encontrar_centro_imagem(r'Imagens\ultimoAguarde.png')
     sleep(2)
 
 
 def aguardar1():
-    aguarde = encontrarImagem(r'Imagens\telaDeAguarde1.png')
+    aguarde = encontrar_imagem(r'Imagens\telaDeAguarde1.png')
     while type(aguarde) == pyscreeze.Box:
-        aguarde = encontrarImagem(r'Imagens\telaDeAguarde1.png')
+        aguarde = encontrar_imagem(r'Imagens\telaDeAguarde1.png')
 
 
 def aguardar2():
-    aguarde1 = encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
-    aguarde2 = encontrarImagemLocalizada(r'Imagens\telaDeAguarde2.png')
+    aguarde1 = encontrar_centro_imagem(r'Imagens\telaDeAguarde1.png')
+    aguarde2 = encontrar_centro_imagem(r'Imagens\telaDeAguarde2.png')
     return aguarde1, aguarde2
 
 
-def lancarRetroativo():
-    lancamento_retroativo = encontrarImagemLocalizada(r'Imagens\LancamentoRetroativo.png')
+def lancar_retroativo():
+    lancamento_retroativo = encontrar_centro_imagem(r'Imagens\LancamentoRetroativo.png')
     if type(lancamento_retroativo) == tuple:
         sleep(0.5)
-        press("enter")
+        ptg.press("enter")
         sleep(1)
 
 
-def repetirBotao():
-    repetir_acao = encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
+def repetir_botao():
+    repetir_acao = encontrar_centro_imagem(r'Imagens\botaoLancarNota.png')
     while type(repetir_acao) == tuple:
-        press("enter")
-        repetir_acao = encontrarImagemLocalizada(r'Imagens\botaoLancarNota.png')
+        ptg.press("enter")
+        repetir_acao = encontrar_centro_imagem(r'Imagens\botaoLancarNota.png')
 
 
-def tratarProcessosPendentes():
-    press("enter")
-    tabEEnter()
-    sleep(2)
-    repetirBotao()
+def tratar_processos_pendentes():
+    ptg.press("enter")
+    ptg.press(["tab"]*4)
+    sleep(0.5)
+    ptg.press("enter")
+    sleep(2.5)
+    repetir_botao()
 
 
-def tratarEtapaFinal():
-    x, y = clicarDuasVezes(r'Imagens\finalizarLancamento.png')
+def tratar_etapa_final():
+    x, y = clicar_2x(r'Imagens\finalizarLancamento.png')
     sleep(0.7)
     while True:
-        moveTo(150,100)
-        quebrar_loop = encontrarImagemLocalizada(r'Imagens\quebrarloop.png')
+        ptg.moveTo(150,100)
+        quebrar_loop = encontrar_centro_imagem(r'Imagens\quebrarloop.png')
         if type(quebrar_loop) != tuple:
             break
         else:
-            doubleClick(x, y)
+            ptg.doubleClick(x, y)
 
 
-def clicarBotaoSair():
-    botao_sair = encontrarImagemLocalizada(r'Imagens\finalizarESair.png')
+def clicar_botao_sair():
+    botao_sair = encontrar_centro_imagem(r'Imagens\finalizarESair.png')
     if type(botao_sair) == tuple:
-        press(["tab"]*6)
+        ptg.press(["tab"]*6)
         sleep(0.3)
-        press("enter")
+        ptg.press("enter")
         sleep(1)
+    
 
-
-def tabEEnter():
-    press(["tab"]*4)
-    sleep(0.5)
-    press("enter")
-    sleep(1)
-
-
-def esperarAparecer(imagem):
-    encontrar = encontrarImagemLocalizada(imagem)
+def esperar_aparecer(imagem):
+    encontrar = encontrar_centro_imagem(imagem)
     while type(encontrar) != tuple:
-        encontrar = encontrarImagemLocalizada(imagem)
+        encontrar = encontrar_centro_imagem(imagem)
     return encontrar
 
 
-def clicarEmFinalizar():
-    press("enter")          
+def clicar_finalizar():
+    ptg.press("enter")          
     sleep(1)  
-    x, y = clicarDuasVezes(r'Imagens\botaoFinalizar.png')
+    x, y = clicar_2x(r'Imagens\botaoFinalizar.png')
     sleep(1)
     return x, y
 
 
-def passosParaRecomecar():
-    hotkey("shift", "tab", interval=0.05)
-    press("enter")
-    sleep(1)
-    press("down")
-
-
-def clicarDuasVezes(imagem):
-    variavel = encontrarImagemLocalizada(imagem)
+def clicar_2x(imagem):
+    variavel = encontrar_centro_imagem(imagem)
     x, y = variavel
-    doubleClick(x,y)
+    ptg.doubleClick(x,y)
     return x, y
 
 
-def clicarMicrosiga(imagem=r'Imagens\microsiga.png'):
+def clicar_microsiga(imagem=r'Imagens\microsiga.png'):
     try:
-        x, y = encontrarImagemLocalizada(imagem)
-        mouseClique(x, y)
+        x, y = encontrar_centro_imagem(imagem)
+        ptg.click(x, y)
     except:
-        x, y = encontrarImagemLocalizada(r'Imagens\microsigaWin11.png')
-        mouseClique(x, y)
+        x, y = encontrar_centro_imagem(r'Imagens\microsigaWin11.png')
+        ptg.click(x, y)
     
 
 def formatador(variavel, casas_decimais="{:.2f}"):

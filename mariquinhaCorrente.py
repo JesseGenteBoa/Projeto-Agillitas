@@ -1,5 +1,4 @@
-from pyautogui import hotkey, press, FAILSAFE
-from pydirectinput import click as mouseClique, moveTo, doubleClick
+import pyautogui as ptg
 from pyperclip import copy  
 from time import sleep
 from pathlib import Path
@@ -29,218 +28,216 @@ def robozinho():
 
 
     try:
-        primeiro_clique = utils.encontrarImagemLocalizada(r'Imagens\filtrarPendentes.png')
+        primeiro_clique = utils.encontrar_centro_imagem(r'Imagens\filtrarPendentes.png')
         x, y = primeiro_clique
-        mouseClique(x, y)
+        ptg.click(x, y)
     except TypeError:
-        primeiro_clique = utils.encontrarImagemLocalizada(r'Imagens\filtrarPendentesSelecionado.png')
+        primeiro_clique = utils.encontrar_centro_imagem(r'Imagens\filtrarPendentesSelecionado.png')
         x, y = primeiro_clique
-        mouseClique(x, y)
+        ptg.click(x, y)
 
-    controle_acao = utils.encontrarImagemLocalizada(r'Imagens\controleDeAcao.png')
+    controle_acao = utils.encontrar_centro_imagem(r'Imagens\controleDeAcao.png')
     if type(controle_acao) != tuple:
         sleep(0.5)
-        hotkey(["shift", "tab"]*4, interval=0.04)
-        press("p", interval=0.1)
-        mouseClique(x, y)
-        hotkey("shift", "tab", interval=0.04)
-        press("backspace")
-        press(["tab"]*2, interval=0.04)
-        press("enter", interval=1)
+        ptg.hotkey(["shift", "tab"]*4, interval=0.04)
+        ptg.press("p", interval=0.1)
+        ptg.click(x, y)
+        ptg.hotkey("shift", "tab", interval=0.04)
+        ptg.press("backspace")
+        ptg.press(["tab"]*2, interval=0.04)
+        ptg.press("enter", interval=1)
 
-    acaoComum.procederPrimario()
+    acaoComum.proceder_primario()
 
-    moveTo(150,100)
-    esperar = utils.esperarAparecer(r'Imagens\statusPendente2.png')
+    ptg.moveTo(150,100)
+    esperar = utils.esperar_aparecer(r'Imagens\statusPendente2.png')
 
     sleep(0.5)
 
-    estado_do_caixa = acaoComum.filtrarPorStatus()
+    estado_do_caixa = acaoComum.filtrar_status()
         
-    def operarLancamento(pular_processo):
+    def operar_lancamento(pular_processo):
         estado_do_caixa = False
         global doc
 
-        controlador = acaoComum.verificarStatus()
+        controlador = acaoComum.verificar_status()
 
         if controlador == 1:
-            estado_do_caixa = acaoComum.clicarEmLancar()
-            cc_bloqueado = utils.encontrarImagem(r'Imagens\ccBloqueado.png')
+            estado_do_caixa = acaoComum.clicar_Lancar()
+            cc_bloqueado = utils.encontrar_imagem(r'Imagens\ccBloqueado.png')
             if type(cc_bloqueado) == pyscreeze.Box:
-                press("enter", interval=0.5)
-                acaoComum.rejeitarCaixa()
+                ptg.press("enter", interval=0.5)
+                acaoComum.rejeitar_caixa()
                 return robozinho()
             
-            repentina_etapa_final = utils.encontrarImagem(r'Imagens\etapaFinal.png')
+            repentina_etapa_final = utils.encontrar_imagem(r'Imagens\etapaFinal.png')
 
             if type(repentina_etapa_final) == pyscreeze.Box:
-                utils.tratarEtapaFinal()
+                utils.tratar_etapa_final()
 
             if estado_do_caixa == "NF já lançada":
                 controle_de_repeticao.append(chave_de_acesso)
                 pular_processo.append(chave_de_acesso)
-                press("tab", interval=0.3)
-                press("enter", interval=0.5)
+                ptg.press("tab", interval=0.3)
+                ptg.press("enter", interval=0.5)
                 if not rt_contador:
-                    autor_da_rt, rt = acaoComum.copiarRT(passos=1)
+                    autor_da_rt, rt = acaoComum.copiar_RT(passos=1)
                     dono_da_rt.append(autor_da_rt)
                     rt_contador.append(rt)
                 nf_ja_lancada.append(rt_contador[0])
-                acaoComum.pularProcesso()
-                return operarLancamento(pular_processo)
+                acaoComum.pular_processo()
+                return operar_lancamento(pular_processo)
             
             elif estado_do_caixa == True:
-                x, y = utils.clicarEmFinalizar()
-                finalizar = utils.encontrarImagemLocalizada(r'Imagens\finalizar.png')
-                ainda_tem_processo_pendente = utils.encontrarImagemLocalizada(r'Imagens\aindaTemProcessoParaLancar.png')
-                finalizar, ainda_tem_processo_pendente = acaoComum.insistirEmEncontrar(finalizar, ainda_tem_processo_pendente, x, y)
+                x, y = utils.clicar_finalizar()
+                finalizar = utils.encontrar_centro_imagem(r'Imagens\finalizar.png')
+                ainda_tem_processo_pendente = utils.encontrar_centro_imagem(r'Imagens\aindaTemProcessoParaLancar.png')
+                finalizar, ainda_tem_processo_pendente = acaoComum.insistir_ate_encontrar(finalizar, ainda_tem_processo_pendente, x, y)
 
                 if type(ainda_tem_processo_pendente) == tuple:
-                    utils.tratarProcessosPendentes()
+                    utils.tratar_processos_pendentes()
                     if rt_contador:
-                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                        utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                     return robozinho()
                 
                 if type(finalizar) == tuple:
-                    press("enter")
+                    ptg.press("enter")
                 utils.aguardar()
-                utils.clicarBotaoSair()
+                utils.clicar_botao_sair()
                 if rt_contador:
-                    utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                    utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                 return robozinho()
             
             else:
-                estado_do_caixa = acaoComum.filtrarPorStatus()
+                estado_do_caixa = acaoComum.filtrar_status()
 
                 if type(estado_do_caixa) == tuple:
-                    x, y = utils.clicarEmFinalizar()
-                    finalizar = utils.encontrarImagemLocalizada(r'Imagens\finalizar.png')
-                    ainda_tem_processo_pendente = utils.encontrarImagemLocalizada(r'Imagens\aindaTemProcessoParaLancar.png')
-                    finalizar, ainda_tem_processo_pendente = acaoComum.insistirEmEncontrar(finalizar, ainda_tem_processo_pendente, x, y)
+                    x, y = utils.clicar_finalizar()
+                    finalizar = utils.encontrar_centro_imagem(r'Imagens\finalizar.png')
+                    ainda_tem_processo_pendente = utils.encontrar_centro_imagem(r'Imagens\aindaTemProcessoParaLancar.png')
+                    finalizar, ainda_tem_processo_pendente = acaoComum.insistir_ate_encontrar(finalizar, ainda_tem_processo_pendente, x, y)
 
                     if type(ainda_tem_processo_pendente) == tuple:
-                        utils.tratarProcessosPendentes()
+                        utils.tratar_processos_pendentes()
                         if rt_contador:
-                            utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                            utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                         return robozinho()
                     
                     if type(finalizar) == tuple:
-                        press("enter")
+                        ptg.press("enter")
                     utils.aguardar()
-                    utils.clicarBotaoSair()
+                    utils.clicar_botao_sair()
                     if rt_contador:
-                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                        utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                     return robozinho()
                 
                 controle_de_repeticao.clear()
-                return operarLancamento(pular_processo)
+                return operar_lancamento(pular_processo)
             
 
         elif controlador == 2:
-            status_nf, inserir_xml = acaoComum.solicitarXML()
+            status_nf, inserir_xml = acaoComum.solicitar_XML()
 
             if type(status_nf) == tuple:
                 try:
                     numero_nf = chave_de_acesso[25:34]
                 except UnboundLocalError:
-                    chave_de_acesso, processo_feito_errado = acaoComum.copiarChaveDeAcesso()
+                    chave_de_acesso, processo_feito_errado = acaoComum.copiar_chave_acesso()
                     numero_nf = chave_de_acesso[25:34]
-                acaoComum.rejeitarCaixa(mensagem = f"NF {numero_nf} foi cancelada pelo fornecedor.")
+                acaoComum.rejeitar_caixa(mensagem = f"NF {numero_nf} foi cancelada pelo fornecedor.")
                 print("NF cancelada")
                 return robozinho()
             
             if type(inserir_xml) == tuple:
-                chave_de_acesso, processo_feito_errado = acaoComum.copiarChaveDeAcesso()
-                x, y = utils.clicarDuasVezes(r'Imagens\solicitarXML.png')
+                chave_de_acesso, processo_feito_errado = acaoComum.copiar_chave_acesso()
+                x, y = utils.clicar_2x(r'Imagens\solicitarXML.png')
 
                 while True:
-                    aguardando = utils.encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
-                    falsa_duplicidade = utils.encontrarImagemLocalizada(r'Imagens\falsaDuplicidade.png')
-                    xml_manual = utils.encontrarImagemLocalizada(r'Imagens\inserirXML.png')
+                    aguardando = utils.encontrar_centro_imagem(r'Imagens\telaDeAguarde1.png')
+                    falsa_duplicidade = utils.encontrar_centro_imagem(r'Imagens\falsaDuplicidade.png')
+                    xml_manual = utils.encontrar_centro_imagem(r'Imagens\inserirXML.png')
                     if type(aguardando) == tuple:
                         while type(aguardando) == tuple:
-                            aguardando = utils.encontrarImagemLocalizada(r'Imagens\telaDeAguarde1.png')
+                            aguardando = utils.encontrar_centro_imagem(r'Imagens\telaDeAguarde1.png')
                     elif type(falsa_duplicidade) == tuple or type(xml_manual) == tuple:
                         try:
                             verificador = pular_processo.index(chave_de_acesso)
                             try:
                                 verificador = controle_de_repeticao.index(chave_de_acesso)
-                                press(["tab"]*7, interval=0.1)
+                                ptg.press(["tab"]*7, interval=0.1)
                                 sleep(1)
-                                press("enter", interval=1)
-                                utils.repetirBotao()
-                                clique_status = utils.esperarAparecer(r'Imagens\status.png')  
+                                ptg.press("enter", interval=1)
+                                utils.repetir_botao()
+                                clique_status = utils.esperar_aparecer(r'Imagens\status.png')  
                                 x, y = clique_status
-                                mouseClique(x, y)
+                                ptg.click(x, y)
                                 sleep(0.7)
-                                press("down")
+                                ptg.press("down")
                                 if rt_contador:
-                                    utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                                    utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                                 return robozinho()
                             
                             except:
-                                press("right", interval=0.05)
-                                press("enter")
-                                acaoComum.pularProcesso()
+                                ptg.press("right", interval=0.05)
+                                ptg.press("enter")
+                                acaoComum.pular_processo()
                                 print("Já vi esse, paizão")
                                 controle_de_repeticao.append(chave_de_acesso)
-                                return operarLancamento(pular_processo)
+                                return operar_lancamento(pular_processo)
                             
                         except:
                             caminho = "C:\\Users\\User\\OneDrive - EQS Engenharia Ltda\\Área de Trabalho\\Mariquinha\\xmlFiscalio\\" + chave_de_acesso + ".xml"
                             path = Path(caminho)
 
                             if not path.exists():
-                                press("right", interval=0.05)
-                                press("enter")
+                                ptg.press("right", interval=0.05)
+                                ptg.press("enter")
                                 pular_processo.append(chave_de_acesso)
                                 controle_de_repeticao.append(chave_de_acesso)
                                 if not rt_contador:
-                                    autor_da_rt, rt = acaoComum.copiarRT(passos=4)
+                                    autor_da_rt, rt = acaoComum.copiar_RT(passos=4)
                                     dono_da_rt.append(autor_da_rt)
                                     rt_contador.append(rt)
-                                acaoComum.pularProcesso()
+                                acaoComum.pular_processo()
                                 sem_xml.append(rt_contador[0])
-                                return operarLancamento(pular_processo)
+                                return operar_lancamento(pular_processo)
                             
-                        press("enter", interval=0.5)
-                        press("tab")
-                        #caminho_absoluto = str(Path('xmlFiscalio').resolve())
-                        #caminho = fr'{caminho_absoluto}\{chave_de_acesso}.xml'
+                        ptg.press("enter", interval=0.5)
+                        ptg.press("tab")
                         copy(caminho)
-                        hotkey("ctrl", "v")
+                        ptg.hotkey("ctrl", "v")
                         sleep(0.7)
-                        hotkey(["shift", "tab"]*2, interval=0.4)
-                        press("enter", interval=2)
+                        ptg.hotkey(["shift", "tab"]*2, interval=0.4)
+                        ptg.press("enter", interval=2)
 
-                        erro_de_xml = utils.encontrarImagem(r'Imagens\erroNaImportacaoDoXML.png')
+                        erro_de_xml = utils.encontrar_imagem(r'Imagens\erroNaImportacaoDoXML.png')
                         if type(erro_de_xml) == pyscreeze.Box:
-                            press("enter")
+                            ptg.press("enter")
                             pular_processo.append(chave_de_acesso)
                             controle_de_repeticao.append(chave_de_acesso)
                             if not rt_contador:
-                                autor_da_rt, rt = acaoComum.copiarRT()
+                                autor_da_rt, rt = acaoComum.copiar_RT()
                                 dono_da_rt.append(autor_da_rt)
                                 rt_contador.append(rt)
-                            acaoComum.pularProcesso()
+                            acaoComum.pular_processo()
                             sem_xml.append(rt_contador[0])
-                            return operarLancamento(pular_processo)
-                        estado_do_caixa = acaoComum.filtrarPorStatus()
-                        return operarLancamento(pular_processo)
+                            return operar_lancamento(pular_processo)
+                        estado_do_caixa = acaoComum.filtrar_status()
+                        return operar_lancamento(pular_processo)
                     
                     else:
-                        clicar_novamente = utils.encontrarImagemLocalizada(r'Imagens\XMLPendente.png')
+                        clicar_novamente = utils.encontrar_centro_imagem(r'Imagens\XMLPendente.png')
                         if type(clicar_novamente) == tuple:
-                            doubleClick(x,y)
+                            ptg.doubleClick(x,y)
                         else:
                             break
 
-            estado_do_caixa = acaoComum.filtrarPorStatus()
-            return operarLancamento(pular_processo)
+            estado_do_caixa = acaoComum.filtrar_status()
+            return operar_lancamento(pular_processo)
         
 
         elif controlador == 3 or controlador == 5:
-            chave_de_acesso, processo_feito_errado = acaoComum.copiarChaveDeAcesso()
+            chave_de_acesso, processo_feito_errado = acaoComum.copiar_chave_acesso()
 
             if processo_feito_errado == True or controlador == 5:
                 try:
@@ -249,7 +246,7 @@ def robozinho():
                     controle_de_repeticao.append(chave_de_acesso)
                     print("Erro de Chave de Acesso")
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
+                        autor_da_rt, rt = acaoComum.copiar_RT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
                     try:
@@ -257,31 +254,31 @@ def robozinho():
                     except:
                         chave_inconforme.append(rt_contador[0])
                     pular_processo.append(chave_de_acesso)
-                    acaoComum.pularProcesso()
-                    return operarLancamento(pular_processo)
+                    acaoComum.pular_processo()
+                    return operar_lancamento(pular_processo)
             
             try:
                 verificador = pular_processo.index(chave_de_acesso)
                 try:
                     verificador = controle_de_repeticao.index(chave_de_acesso)
-                    press(["tab"]*7, interval=0.1)
+                    ptg.press(["tab"]*7, interval=0.1)
                     sleep(1)
-                    press("enter", interval=1)
-                    utils.repetirBotao()
-                    clique_status = utils.esperarAparecer(r'Imagens\status.png')  
+                    ptg.press("enter", interval=1)
+                    utils.repetir_botao()
+                    clique_status = utils.esperar_aparecer(r'Imagens\status.png')  
                     x, y = clique_status
-                    mouseClique(x, y)
+                    ptg.click(x, y)
                     sleep(0.7)
-                    press("down")
+                    ptg.press("down")
                     if rt_contador:
-                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                        utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                     return robozinho()
                 
                 except:
-                    acaoComum.pularProcesso()
+                    acaoComum.pular_processo()
                     print("Já vi esse, paizão")
                     controle_de_repeticao.append(chave_de_acesso)
-                    return operarLancamento(pular_processo)
+                    return operar_lancamento(pular_processo)
                 
             except ValueError:
                 caminho = "C:\\Users\\User\\OneDrive - EQS Engenharia Ltda\\Área de Trabalho\\Mariquinha\\xmlFiscalio\\" + chave_de_acesso + ".xml"
@@ -291,93 +288,91 @@ def robozinho():
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
+                        autor_da_rt, rt = acaoComum.copiar_RT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
-                    acaoComum.pularProcesso()
+                    acaoComum.pular_processo()
                     sem_xml.append(rt_contador[0])
-                    return operarLancamento(pular_processo)
+                    return operar_lancamento(pular_processo)
                 
-                x, y = utils.clicarDuasVezes(r'Imagens\solicitarXML.png')
+                x, y = utils.clicar_2x(r'Imagens\solicitarXML.png')
 
                 while True:
-                    solicitar_xml = utils.encontrarImagem(r'Imagens\XMLAindaNaoSolicitado.png')
-                    solicitar_xml2 = utils.encontrarImagem(r'Imagens\XMLAindaNaoSolicitado2.png')
+                    solicitar_xml = utils.encontrar_imagem(r'Imagens\XMLAindaNaoSolicitado.png')
+                    solicitar_xml2 = utils.encontrar_imagem(r'Imagens\XMLAindaNaoSolicitado2.png')
                     if type(solicitar_xml) == pyscreeze.Box or type(solicitar_xml2) == pyscreeze.Box:
                         break
 
-                press("enter", interval=1)
-                press("tab")
-                #caminho_absoluto = str(Path('xmlFiscalio').resolve())
-                #caminho = fr'{caminho_absoluto}\{chave_de_acesso}.xml'
+                ptg.press("enter", interval=1)
+                ptg.press("tab")
                 copy(caminho)
-                hotkey("ctrl", "v")
+                ptg.hotkey("ctrl", "v")
                 sleep(0.7)
-                hotkey(["shift", "tab"]*2, interval=0.4)
-                press("enter", interval=2)
+                ptg.hotkey(["shift", "tab"]*2, interval=0.4)
+                ptg.press("enter", interval=2)
 
-                erro_de_xml = utils.encontrarImagem(r'Imagens\erroNaImportacaoDoXML.png')
+                erro_de_xml = utils.encontrar_imagem(r'Imagens\erroNaImportacaoDoXML.png')
                 if type(erro_de_xml) == pyscreeze.Box:
-                    press("enter")
+                    ptg.press("enter")
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT()
+                        autor_da_rt, rt = acaoComum.copiar_RT()
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
-                    acaoComum.pularProcesso()
+                    acaoComum.pular_processo()
                     sem_xml.append(rt_contador[0])
-                    return operarLancamento(pular_processo)
+                    return operar_lancamento(pular_processo)
                 
-                estado_do_caixa = acaoComum.filtrarPorStatus()
-                return operarLancamento(pular_processo)
+                estado_do_caixa = acaoComum.filtrar_status()
+                return operar_lancamento(pular_processo)
             
         else:
-            chave_de_acesso, processo_feito_errado = acaoComum.copiarChaveDeAcesso()
+            chave_de_acesso, processo_feito_errado = acaoComum.copiar_chave_acesso()
             estado_do_caixa = chave_de_acesso
 
             if estado_do_caixa == True:
-                x, y = utils.clicarEmFinalizar()
-                finalizar = utils.encontrarImagemLocalizada(r'Imagens\finalizar.png')
-                ainda_tem_processo_pendente = utils.encontrarImagemLocalizada(r'Imagens\aindaTemProcessoParaLancar.png')
-                finalizar, ainda_tem_processo_pendente = acaoComum.insistirEmEncontrar(finalizar, ainda_tem_processo_pendente, x, y)
+                x, y = utils.clicar_finalizar()
+                finalizar = utils.encontrar_centro_imagem(r'Imagens\finalizar.png')
+                ainda_tem_processo_pendente = utils.encontrar_centro_imagem(r'Imagens\aindaTemProcessoParaLancar.png')
+                finalizar, ainda_tem_processo_pendente = acaoComum.insistir_ate_encontrar(finalizar, ainda_tem_processo_pendente, x, y)
 
                 if type(ainda_tem_processo_pendente) == tuple:
-                    utils.tratarProcessosPendentes()
+                    utils.tratar_processos_pendentes()
                     if rt_contador:
-                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                        utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                     return robozinho()
                 
                 if type(finalizar) == tuple:
-                    press("enter")
+                    ptg.press("enter")
                 utils.aguardar()
-                utils.clicarBotaoSair()
+                utils.clicar_botao_sair()
                 if rt_contador:
-                    utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                    utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                 return robozinho()
             
             try:
                 verificador = pular_processo.index(chave_de_acesso)
                 try:
                     verificador = controle_de_repeticao.index(chave_de_acesso)
-                    press(["tab"]*7, interval=0.5)
+                    ptg.press(["tab"]*7, interval=0.5)
                     sleep(2)
-                    press("enter", interval=1)
-                    utils.repetirBotao()
-                    clique_status = utils.esperarAparecer(r'Imagens\status.png')  
+                    ptg.press("enter", interval=1)
+                    utils.repetir_botao()
+                    clique_status = utils.esperar_aparecer(r'Imagens\status.png')  
                     x, y = clique_status
-                    mouseClique(x, y)
+                    ptg.click(x, y)
                     sleep(0.7)
-                    press("down")
+                    ptg.press("down")
                     if rt_contador:
-                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                        utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                     return robozinho()
                 
                 except:
-                    acaoComum.pularProcesso()
+                    acaoComum.pular_processo()
                     print("Já vi esse, paizão")
                     controle_de_repeticao.append(chave_de_acesso)
-                    return operarLancamento(pular_processo)
+                    return operar_lancamento(pular_processo)
                 
             except:
                 caminho = "C:\\Users\\User\\OneDrive - EQS Engenharia Ltda\\Área de Trabalho\\Mariquinha\\xmlFiscalio\\" + chave_de_acesso + ".xml"
@@ -387,80 +382,80 @@ def robozinho():
                     pular_processo.append(chave_de_acesso)
                     controle_de_repeticao.append(chave_de_acesso)
                     if not rt_contador:
-                        autor_da_rt, rt = acaoComum.copiarRT(passos=4)
+                        autor_da_rt, rt = acaoComum.copiar_RT(passos=4)
                         dono_da_rt.append(autor_da_rt)
                         rt_contador.append(rt)
-                    acaoComum.pularProcesso()
+                    acaoComum.pular_processo()
                     sem_xml.append(rt_contador[0])
-                    return operarLancamento(pular_processo)
+                    return operar_lancamento(pular_processo)
                 
-            estado_do_caixa = acaoComum.clicarEmLancar()
+            estado_do_caixa = acaoComum.clicar_Lancar()
             if estado_do_caixa == "NF já lançada":
                 controle_de_repeticao.append(chave_de_acesso)
                 pular_processo.append(chave_de_acesso)
-                press("tab", interval=0.3)
-                press("enter", interval=0.5)
+                ptg.press("tab", interval=0.3)
+                ptg.press("enter", interval=0.5)
                 if not rt_contador:
-                    autor_da_rt, rt = acaoComum.copiarRT(passos=1)
+                    autor_da_rt, rt = acaoComum.copiar_RT(passos=1)
                     dono_da_rt.append(autor_da_rt)
                     rt_contador.append(rt)
                 nf_ja_lancada.append(rt_contador[0])
-                acaoComum.pularProcesso()
-                return operarLancamento(pular_processo)
+                acaoComum.pular_processo()
+                return operar_lancamento(pular_processo)
                 
             elif estado_do_caixa == True:
-                x, y = utils.clicarEmFinalizar()
-                finalizar = utils.encontrarImagemLocalizada(r'Imagens\finalizar.png')
-                ainda_tem_processo_pendente = utils.encontrarImagemLocalizada(r'Imagens\aindaTemProcessoParaLancar.png')
-                finalizar, ainda_tem_processo_pendente = acaoComum.insistirEmEncontrar(finalizar, ainda_tem_processo_pendente, x, y)
+                x, y = utils.clicar_finalizar()
+                finalizar = utils.encontrar_centro_imagem(r'Imagens\finalizar.png')
+                ainda_tem_processo_pendente = utils.encontrar_centro_imagem(r'Imagens\aindaTemProcessoParaLancar.png')
+                finalizar, ainda_tem_processo_pendente = acaoComum.insistir_ate_encontrar(finalizar, ainda_tem_processo_pendente, x, y)
 
                 if type(ainda_tem_processo_pendente) == tuple:
-                    utils.tratarProcessosPendentes()
+                    utils.tratar_processos_pendentes()
                     if rt_contador:
-                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                        utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                     return robozinho()
                 
                 if type(finalizar) == tuple:
-                    press("enter")
+                    ptg.press("enter")
                 utils.aguardar()
-                utils.clicarBotaoSair()
+                utils.clicar_botao_sair()
                 if rt_contador:
-                    utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                    utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                 return robozinho()
             
             else:
-                nome_fantasia_forn, itens, indices_e_impostos = acaoComum.extrairDadosXML(caminho)
+                nome_fantasia_forn, itens, indices_e_impostos = acaoComum.extrair_dados_XML(caminho)
 
                 print(nome_fantasia_forn, itens, indices_e_impostos)
 
 
-                tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
+                tela_de_lancamento = utils.encontrar_imagem(r'Imagens\documentoEntrada.png')
                 while type(tela_de_lancamento) != pyscreeze.Box:
 
-                    acaoComum.verificarCadastroForn(nome_fantasia_forn)
+                    acaoComum.verificar_cadastro_forn(nome_fantasia_forn)
 
-                    tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
-                    utils.lancarRetroativo()
+                    tela_de_lancamento = utils.encontrar_imagem(r'Imagens\documentoEntrada.png')
+                    utils.lancar_retroativo()
 
-                    tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
-                    tela_bloqueio = utils.encontrarImagem(r'Imagens\algumBloqueio.png')
+                    tela_de_lancamento = utils.encontrar_imagem(r'Imagens\documentoEntrada.png')
+                    tela_bloqueio = utils.encontrar_imagem(r'Imagens\algumBloqueio.png')
                     if type(tela_bloqueio) == pyscreeze.Box:
                         pular_processo.append(chave_de_acesso)
                         controle_de_repeticao.append(chave_de_acesso)
-                        press("enter", interval=1)
+                        ptg.press("enter", interval=1)
                         utils.aguardar1()
-                        cc_bloqueado = utils.encontrarImagem(r'Imagens\ccBloqueado.png')
+                        cc_bloqueado = utils.encontrar_imagem(r'Imagens\ccBloqueado.png')
                         if type(cc_bloqueado) == pyscreeze.Box:
-                            press("enter", interval=0.5)
-                            acaoComum.rejeitarCaixa()
+                            ptg.press("enter", interval=0.5)
+                            acaoComum.rejeitar_caixa()
                             print("Erro de CC")
                             return robozinho()
-                        prod_bloq = utils.encontrarImagemLocalizada(r'Imagens\produtoBloqueado.png')
-                        erro_condicao_pag = utils.encontrarImagemLocalizada(r'Imagens\erroCondicaoDePagamento.png')
+                        prod_bloq = utils.encontrar_centro_imagem(r'Imagens\produtoBloqueado.png')
+                        erro_condicao_pag = utils.encontrar_centro_imagem(r'Imagens\erroCondicaoDePagamento.png')
                         if type(prod_bloq) == tuple or type(erro_condicao_pag) == tuple:
-                            press("enter", interval=0.5)
+                            ptg.press("enter", interval=0.5)
                             if not rt_contador:
-                                autor_da_rt, rt = acaoComum.copiarRT(passos=1)
+                                autor_da_rt, rt = acaoComum.copiar_RT(passos=1)
                                 dono_da_rt.append(autor_da_rt)
                                 rt_contador.append(rt)
                         if type(erro_condicao_pag) == tuple:
@@ -469,101 +464,93 @@ def robozinho():
                         elif type(prod_bloq) == tuple:
                             bloqueado.append(rt_contador[0])
                             print("Problema de produto bloqueado, meu parceirinho")
-                        acaoComum.pularProcesso()
-                        return operarLancamento(pular_processo)
+                        acaoComum.pular_processo()
+                        return operar_lancamento(pular_processo)
 
-                    erro_cnpj = utils.encontrarImagemLocalizada(r'Imagens\erroEsquisito.png')
+                    erro_cnpj = utils.encontrar_centro_imagem(r'Imagens\erroEsquisito.png')
                     if type(erro_cnpj) == tuple:
-                        press("enter", interval=1)
+                        ptg.press("enter", interval=1)
                         utils.aguardar1()
 
-                    tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
-                    erro_sefaz = utils.encontrarImagem(r'Imagens\naoEncontradaNoSefaz.png')
-                    chave_divergente = utils.encontrarImagem(r'Imagens\chaveNaoConfereNF.png')
+                    tela_de_lancamento = utils.encontrar_imagem(r'Imagens\documentoEntrada.png')
+                    erro_sefaz = utils.encontrar_imagem(r'Imagens\naoEncontradaNoSefaz.png')
+                    chave_divergente = utils.encontrar_imagem(r'Imagens\chaveNaoConfereNF.png')
                     if type(erro_sefaz) == pyscreeze.Box or type(chave_divergente) == pyscreeze.Box:
                         pular_processo.append(chave_de_acesso)
                         controle_de_repeticao.append(chave_de_acesso)
-                        press("enter", interval=0.5)
-                        tela_bloqueio = utils.esperarAparecer(r'Imagens\algumBloqueio.png')
-                        press("enter", interval=1)
+                        ptg.press("enter", interval=0.5)
+                        tela_bloqueio = utils.esperar_aparecer(r'Imagens\algumBloqueio.png')
+                        ptg.press("enter", interval=1)
                         utils.aguardar1()
-                        erro_condicao_pag = utils.encontrarImagemLocalizada(r'Imagens\erroCondicaoDePagamento.png')
+                        erro_condicao_pag = utils.encontrar_centro_imagem(r'Imagens\erroCondicaoDePagamento.png')
                         if type(erro_condicao_pag) == tuple:
-                            press("enter", interval=0.5)
-                        erro_generico = utils.encontrarImagemLocalizada(r'Imagens\erroGenerico.png')   
+                            ptg.press("enter", interval=0.5)
+                        erro_generico = utils.encontrar_centro_imagem(r'Imagens\erroGenerico.png')   
                         if type(erro_generico) == tuple:
-                            press("enter", interval=0.5)
+                            ptg.press("enter", interval=0.5)
                         if not rt_contador:
-                            autor_da_rt, rt = acaoComum.copiarRT(passos=1)
+                            autor_da_rt, rt = acaoComum.copiar_RT(passos=1)
                             dono_da_rt.append(autor_da_rt)
                             rt_contador.append(rt)
-                        acaoComum.pularProcesso()
+                        acaoComum.pular_processo()
                         if type(erro_cnpj) == tuple:
                             cnpj_inconclusivo.append(rt_contador[0])
-                            print("Erro inconclusivo com o CNPJ")
                         elif type(erro_condicao_pag) == tuple:
                             cond_pag.append(rt_contador[0])
-                            print("Erro de condição de pagamento, meu patrãozinho")
                         else:
                             chave_sefaz.append(rt_contador[0])
-                            print("Problema com a chave de acesso, meu patrãozinho")
-                        return operarLancamento(pular_processo)
+                        return operar_lancamento(pular_processo)
 
-                    tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
-                    erro_ncm = utils.encontrarImagemLocalizada(r'Imagens\erroNCM.png')
+                    tela_de_lancamento = utils.encontrar_imagem(r'Imagens\documentoEntrada.png')
+                    erro_ncm = utils.encontrar_centro_imagem(r'Imagens\erroNCM.png')
                     if type(erro_ncm) == tuple:
                         pular_processo.append(chave_de_acesso)
                         controle_de_repeticao.append(chave_de_acesso)
-                        press("esc", interval=0.7)
+                        ptg.press("esc", interval=0.7)
                         if not rt_contador:
-                            autor_da_rt, rt = acaoComum.copiarRT(passos=1)
+                            autor_da_rt, rt = acaoComum.copiar_RT(passos=1)
                             dono_da_rt.append(autor_da_rt)
                             rt_contador.append(rt)
-                        acaoComum.pularProcesso()
+                        acaoComum.pular_processo()
                         ncm_problematica.append(rt_contador[0])
-                        print("Problema na NCM, meu parceirinho")
-                        return operarLancamento(pular_processo)
+                        return operar_lancamento(pular_processo)
                     
-                    tela_de_lancamento = utils.encontrarImagem(r'Imagens\documentoEntrada.png')
+                    tela_de_lancamento = utils.encontrar_imagem(r'Imagens\documentoEntrada.png')
                     
-                press(["tab"]*10)
+                ptg.press(["tab"]*10)
                 sleep(0.6)
-                press(["right"]*8) 
+                ptg.press(["right"]*8) 
 
 
-                acaoComum.inserirValoresDaNFnoSistema(indices_e_impostos, itens)
+                acaoComum.inserir_valores_da_NF_no_siga(indices_e_impostos, itens)
 
-                acaoComum.finalizarLancamento()
+                acaoComum.finalizar_lancamento()
 
             
-                estado_do_caixa = acaoComum.filtrarPorStatus()
+                estado_do_caixa = acaoComum.filtrar_status()
 
                 if type(estado_do_caixa) == tuple:
-                    x, y = utils.clicarEmFinalizar()
-                    finalizar = utils.encontrarImagemLocalizada(r'Imagens\finalizar.png')
-                    ainda_tem_processo_pendente = utils.encontrarImagemLocalizada(r'Imagens\aindaTemProcessoParaLancar.png')
-                    finalizar, ainda_tem_processo_pendente = acaoComum.insistirEmEncontrar(finalizar, ainda_tem_processo_pendente, x, y)
+                    x, y = utils.clicar_finalizar()
+                    finalizar = utils.encontrar_centro_imagem(r'Imagens\finalizar.png')
+                    ainda_tem_processo_pendente = utils.encontrar_centro_imagem(r'Imagens\aindaTemProcessoParaLancar.png')
+                    finalizar, ainda_tem_processo_pendente = acaoComum.insistir_ate_encontrar(finalizar, ainda_tem_processo_pendente, x, y)
 
                     if type(ainda_tem_processo_pendente) == tuple:
-                        utils.tratarProcessosPendentes()
+                        utils.tratar_processos_pendentes()
                         if rt_contador:
-                            utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                            utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                         return robozinho()
                     
                     if type(finalizar) == tuple:
-                        press("enter")
+                        ptg.press("enter")
                     utils.aguardar()
-                    utils.clicarBotaoSair()
+                    utils.clicar_botao_sair()
                     if rt_contador:
-                        utils.enviarEmail(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
+                        utils.enviar_email(rt_contador, dono_da_rt, sem_xml, chave_inconforme, nf_ja_lancada, cond_pag, bloqueado, cnpj_inconclusivo, chave_sefaz, ncm_problematica)
                     return robozinho()
     
                 controle_de_repeticao.clear()
-                return operarLancamento(pular_processo)
+                return operar_lancamento(pular_processo)
 
-    operarLancamento(pular_processo)
+    operar_lancamento(pular_processo)
     sleep(1)
-
-
-
-

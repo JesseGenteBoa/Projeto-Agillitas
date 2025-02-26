@@ -9,7 +9,7 @@ class ProcessadorXML:
         self.itens = []
 
 
-    def coletarNomeFantasia(self):
+    def coletar_nome_fantasia(self):
     
         try:
             nome_fantasia_forn = self.doc["nfeProc"]["NFe"]["infNFe"]["emit"]["xFant"]
@@ -34,7 +34,7 @@ class ProcessadorXML:
         return nome_fantasia_forn
 
 
-    def coletarDadosXML(self, coletor_xml, impostos_xml):
+    def coletar_dados_XML(self, coletor_xml, impostos_xml):
         valor_prod = coletor_xml["vProd"]
         valor_prod = formatador(valor_prod)
          
@@ -105,7 +105,7 @@ class ProcessadorXML:
         return self.valores_do_item
     
     
-    def trabalharDadosXML(self, valores_do_item):
+    def trabalhar_dados_XML(self, valores_do_item):
         controlador = len(valores_do_item)
         cont = 0
         aux = 0
