@@ -1,5 +1,6 @@
 import pyautogui as ptg
 from time import sleep
+from tkinter import messagebox
 from email.message import EmailMessage
 import pyscreeze
 import smtplib
@@ -186,7 +187,11 @@ def clicar_botao_sair():
         ptg.press(["tab"]*6)
         sleep(0.3)
         ptg.press("enter")
-        sleep(1)
+        sleep(2)
+    trabalho_acabou = encontrar_centro_imagem(r'Imagens\ReferenciaFinal.png')
+    if type(trabalho_acabou) == tuple:
+        messagebox.showinfo("Trabalho finalizado", "Trabalho finalizado com sucesso!")
+        raise Exception("Trabalho finalizado com sucesso!")
     
 
 def esperar_aparecer(imagem):
